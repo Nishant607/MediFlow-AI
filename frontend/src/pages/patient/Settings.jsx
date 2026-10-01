@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,9 +17,12 @@ import {
   Info,
   Clock,
   Sparkles,
+  Camera,
+  Trash2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import PageWrapper from '../../components/common/PageWrapper';
+import useProfilePhoto from '../../hooks/useProfilePhoto';
 
 /* ── Toggle Switch Component ──────────────────────────────── */
 const ToggleSwitch = ({ checked, onChange, disabled = false }) => (
@@ -45,6 +48,11 @@ const ToggleSwitch = ({ checked, onChange, disabled = false }) => (
 const PatientSettingsPage = () => {
   const { currentUser, setCurrentUser } = useAuth();
   const patientProfile = currentUser?.patient_profile || {};
+
+  // Profile photo hook
+  const { photoUrl, uploading, uploadError, handlePhotoChange, removePhoto } =
+    useProfilePhoto(currentUser?.email);
+  const photoInputRef = useRef(null);
 
   // Storage key scoped to user
   const storageKey = `mediflow_settings_patient_${currentUser?.email || 'default'}`;
@@ -229,9 +237,60 @@ const PatientSettingsPage = () => {
           {/* ══════════ COLUMN 1: PATIENT IDENTITY CARD ══════════ */}
           <div className="lg:col-span-1 bg-white rounded-3xl border border-slate-200/90 shadow-clinic p-6 space-y-6">
             <div className="text-center space-y-3">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#007ABF] to-sky-400 text-white text-3xl font-extrabold flex items-center justify-center mx-auto shadow-md border-4 border-white">
-                {initials}
+              {/* ── Photo Upload Area ── */}
+              <div className="relative w-24 h-24 mx-auto">
+                {photoUrl ? (
+                  <img
+                    src={photoUrl}
+                    alt="Profile"
+                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#007ABF] to-sky-400 text-white text-3xl font-extrabold flex items-center justify-center shadow-md border-4 border-white">
+                    {initials}
+                  </div>
+                )}
+                {/* Camera Button */}
+                <button
+                  type="button"
+                  onClick={() => photoInputRef.current?.click()}
+                  disabled={uploading}
+                  title="Upload profile photo"
+                  className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-[#007ABF] text-white flex items-center justify-center shadow-md hover:bg-[#005A9C] transition-colors disabled:opacity-60"
+                >
+                  {uploading ? (
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Camera className="w-3.5 h-3.5" />
+                  )}
+                </button>
+                {/* Hidden file input */}
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={handlePhotoChange}
+                />
               </div>
+
+              {/* Upload error */}
+              {uploadError && (
+                <p className="text-xs text-rose-600 font-medium">{uploadError}</p>
+              )}
+
+              {/* Remove photo button */}
+              {photoUrl && (
+                <button
+                  type="button"
+                  onClick={removePhoto}
+                  className="inline-flex items-center gap-1 text-xs text-rose-500 hover:text-rose-700 font-medium transition-colors"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  Remove photo
+                </button>
+              )}
+
               <div>
                 <h2 className="text-lg font-bold text-slate-900">
                   {firstName} {lastName}

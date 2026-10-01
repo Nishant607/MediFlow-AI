@@ -36,6 +36,7 @@ db.sqlite3-journal
 media/
 staticfiles/
 collected_static/
+celerybeat-schedule*
 
 # ── Testing & Coverage ────────────────────
 .pytest_cache/

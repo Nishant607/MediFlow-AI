@@ -24,12 +24,16 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from './NotificationBell';
+import useProfilePhoto from '../../hooks/useProfilePhoto';
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Profile photo — loads from localStorage scoped to email
+  const { photoUrl } = useProfilePhoto(currentUser?.email);
 
   const role = currentUser?.role;
 
@@ -349,6 +353,16 @@ const Navbar = () => {
           {/* User Profile & Sign Out (Desktop) */}
           {currentUser ? (
             <div className="hidden md:flex items-center gap-2.5 pl-2 border-l border-slate-200">
+              {/* Avatar — photo or initials */}
+              <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm shrink-0">
+                {photoUrl ? (
+                  <img src={photoUrl} alt="avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-[#007ABF]/10 text-[#007ABF] flex items-center justify-center font-bold text-xs">
+                    {(currentUser.full_name || currentUser.email || 'U')[0].toUpperCase()}
+                  </div>
+                )}
+              </div>
               <div className="text-right">
                 <p className="text-xs font-bold text-slate-800 leading-tight">
                   {currentUser.full_name || currentUser.email?.split('@')[0]}
@@ -413,8 +427,14 @@ const Navbar = () => {
             {currentUser && (
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#007ABF]/10 text-[#007ABF] flex items-center justify-center font-bold text-xs">
-                    {currentUser.full_name ? currentUser.full_name[0] : 'U'}
+                  <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-slate-200 shadow-sm shrink-0">
+                    {photoUrl ? (
+                      <img src={photoUrl} alt="avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-[#007ABF]/10 text-[#007ABF] flex items-center justify-center font-bold text-xs">
+                        {currentUser.full_name ? currentUser.full_name[0] : 'U'}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs font-bold text-slate-800">{currentUser.full_name || currentUser.email}</p>
