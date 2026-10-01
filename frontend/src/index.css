@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-surface-50 text-slate-800 font-sans antialiased;
+    background-color: #F8FAFC;
+    color: #1E293B;
+  }
+
+  /* Custom subtle clinical scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F1F5F9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+}
+
+@layer utilities {
+  /* Cleveland Clinic crisp white card styling */
+  .clinic-card, .glass-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  }
+
+  .clinic-card-hover, .glass-card-hover {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .clinic-card-hover:hover, .glass-card-hover:hover {
+    transform: translateY(-2px);
+    border-color: #CBD5E1;
+    box-shadow: 0 10px 25px -4px rgba(0, 90, 156, 0.08), 0 4px 10px -2px rgba(0, 90, 156, 0.04);
+  }
+
+  /* Signature Cleveland Clinic short horizontal blue accent bar */
+  .clinic-accent-bar {
+    width: 2.5rem;
+    height: 0.25rem;
+    background-color: #005A9C;
+    border-radius: 9999px;
+  }
+
+  .text-gradient-brand {
+    color: #005A9C;
+  }
+
+  .text-gradient-cyan {
+    color: #00843D;
+  }
+}
+

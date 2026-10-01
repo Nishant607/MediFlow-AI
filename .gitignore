@@ -1,0 +1,113 @@
+# ==========================================
+# MediFlow AI — .gitignore
+# ==========================================
+
+# ── Python ────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ── Django ────────────────────────────────
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+collected_static/
+
+# ── Testing & Coverage ────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+nosetests.xml
+test-results/
+
+# ── Node / React / Vite ───────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock
+.pnpm-debug.log*
+pnpm-lock.yaml
+dist/
+build/
+.vite/
+*.local
+
+# ── Environment Variables (NEVER commit!) ─
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+backend/.env
+frontend/.env
+
+# ── Docker ────────────────────────────────
+# (docker-compose.yml IS committed — only secrets are ignored)
+.docker/
+
+# ── IDEs & Editors ────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+*.sublime-project
+*.sublime-workspace
+
+# ── OS Generated ──────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Secrets & Keys (NEVER commit!) ────────
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+secret_key.txt
+
+# ── Misc ──────────────────────────────────
+*.bak
+*.tmp
+*.temp
+.cache/
