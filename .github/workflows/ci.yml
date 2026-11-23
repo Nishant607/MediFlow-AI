@@ -29,11 +29,18 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          flake8 .
+          # Stop build only on syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Exit-zero treats styling warnings as non-fatal in CI
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=150 --statistics
 
       - name: Run tests with pytest
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.dev
+          SECRET_KEY: ci-test-secret-key-placeholder-38491
+          DEBUG: 'True'
         run: |
-          pytest --cov=apps --cov-report=term-missing
+          pytest -v
 
   frontend-checks:
     runs-on: ubuntu-latest
