@@ -71,4 +71,7 @@ def test_emergency_contacts_accessible_publicly(api_client, emergency_contacts):
     response = api_client.get(url)
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 2
+    assert len(data) >= 2
+    names = [item['name'] for item in data]
+    assert 'Hospital Emergency Department' in names
+    assert 'Ambulance Service' in names
