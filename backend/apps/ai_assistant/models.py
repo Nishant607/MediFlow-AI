@@ -53,7 +53,16 @@ class Message(models.Model):
     patient = models.ForeignKey(
         'patients.PatientProfile',
         on_delete=models.CASCADE,
-        related_name='ai_messages'
+        related_name='ai_messages',
+        null=True,
+        blank=True
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='ai_chat_messages',
+        null=True,
+        blank=True
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     content = models.TextField()

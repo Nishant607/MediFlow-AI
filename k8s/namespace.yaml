@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mediflow
+  labels:
+    app.kubernetes.io/name: mediflow-ai
+    app.kubernetes.io/part-of: hospital-management-system

@@ -18,7 +18,7 @@ import {
   FileSpreadsheet,
   Printer,
 } from 'lucide-react';
-import { getAdminStats } from '../../api/adminApi';
+import { getAdminStats, getAdminPatients } from '../../api/adminApi';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdminComingSoon from '../../components/admin/AdminComingSoon';
 import Skeleton from '../../components/common/Skeleton';
@@ -72,22 +72,31 @@ const AdminPatientsPage = () => {
   const [stats, setStats] = useState(null);
   const [loadingStats, setLoadingStats] = useState(true);
   const [statsError, setStatsError] = useState('');
+  const [patients, setPatients] = useState([]);
+  const [loadingPatients, setLoadingPatients] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const fetchData = async () => {
+    setLoadingStats(true);
+    setLoadingPatients(true);
+    try {
+      const [statsData, patientsData] = await Promise.all([
+        getAdminStats(),
+        getAdminPatients().catch(() => []),
+      ]);
+      setStats(statsData);
+      setPatients(Array.isArray(patientsData) ? patientsData : patientsData?.results || []);
+    } catch (err) {
+      console.error('Failed to load patient records or stats', err);
+      setStatsError('Could not load patient statistics.');
+    } finally {
+      setLoadingStats(false);
+      setLoadingPatients(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchStats = async () => {
-      setLoadingStats(true);
-      try {
-        const data = await getAdminStats();
-        setStats(data);
-      } catch (err) {
-        console.error('Failed to load admin stats', err);
-        setStatsError('Could not load patient statistics.');
-      } finally {
-        setLoadingStats(false);
-      }
-    };
-    fetchStats();
+    fetchData();
   }, []);
 
   /* ── Export Handlers ─────────────────────────────────────── */
@@ -135,16 +144,26 @@ const AdminPatientsPage = () => {
   };
 
 
+  /* ── Filtered Patients ───────────────────────────────────── */
+  const filteredPatients = React.useMemo(() => {
+    if (!searchQuery.trim()) return patients;
+    const q = searchQuery.toLowerCase();
+    return patients.filter((p) =>
+      (p.full_name || '').toLowerCase().includes(q) ||
+      (p.email || '').toLowerCase().includes(q) ||
+      (p.phone || '').includes(q)
+    );
+  }, [patients, searchQuery]);
+
   /* ── Table columns ───────────────────────────────────────── */
   const columns = [
-    'Name',
-    'Last Appointment',
-    'Age',
+    'Patient Name',
+    'Email Address',
+    'Phone',
     'Date of Birth',
     'Gender',
-    'Diagnosis',
-    'Status',
-    '',
+    'Total Visits',
+    'Registered On',
   ];
 
   return (
@@ -304,28 +323,51 @@ const AdminPatientsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td colSpan={columns.length + 1} className="px-4 py-20 text-center">
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center">
-                        <UserCircle2 className="w-7 h-7 text-slate-300" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-slate-600 mb-1">
-                          Patient records table coming in a future update
-                        </p>
-                        <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                          No data fabricated. This table will display real patient records once
-                          the corresponding admin patients API endpoint is available.
-                        </p>
-                      </div>
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[11px] font-bold uppercase tracking-wide mt-1">
-                        <Clock className="w-3 h-3" />
-                        Coming Soon
-                      </span>
-                    </div>
-                  </td>
-                </tr>
+                {loadingPatients ? (
+                  [...Array(5)].map((_, i) => (
+                    <tr key={i} className="border-b border-slate-100">
+                      <td className="px-4 py-4"><div className="w-4 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                      <td className="px-4 py-4"><div className="w-32 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                      <td className="px-4 py-4"><div className="w-40 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                      <td className="px-4 py-4"><div className="w-24 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                      <td className="px-4 py-4"><div className="w-20 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                      <td className="px-4 py-4"><div className="w-16 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                      <td className="px-4 py-4"><div className="w-12 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                      <td className="px-4 py-4"><div className="w-24 h-4 bg-slate-100 rounded animate-pulse" /></td>
+                    </tr>
+                  ))
+                ) : filteredPatients.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length + 1} className="px-4 py-16 text-center text-slate-500">
+                      <UserCircle2 className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="font-semibold text-slate-700">No patient records found</p>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {searchQuery ? 'Try adjusting your search criteria.' : 'Registered patients will appear here.'}
+                      </p>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredPatients.map((p) => (
+                    <tr key={p.id} className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                      <td className="px-4 py-3.5">
+                        <input type="checkbox" className="rounded border-slate-300 text-[#0EA5C9] focus:ring-[#0EA5C9]" />
+                      </td>
+                      <td className="px-4 py-3.5 font-bold text-slate-900">{p.full_name || 'Patient'}</td>
+                      <td className="px-4 py-3.5 text-slate-600 font-mono text-xs">{p.email || '—'}</td>
+                      <td className="px-4 py-3.5 text-slate-600">{p.phone || '—'}</td>
+                      <td className="px-4 py-3.5 text-slate-600">{p.date_of_birth || '—'}</td>
+                      <td className="px-4 py-3.5 capitalize text-slate-600">{p.gender || '—'}</td>
+                      <td className="px-4 py-3.5">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-sky-50 text-[#0EA5C9] border border-sky-100">
+                          {p.total_appointments ?? 0}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 text-slate-500 text-xs">
+                        {p.created_at ? new Date(p.created_at).toLocaleDateString('en-IN') : '—'}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -371,9 +413,8 @@ const AdminPatientsPage = () => {
             </div>
 
             {/* Entry count */}
-            <p className="text-xs text-slate-400 font-medium">
-              Showing 0 entries &nbsp;·&nbsp;
-              <span className="text-[#0EA5C9] font-semibold cursor-not-allowed">Show All</span>
+            <p className="text-xs text-slate-500 font-medium">
+              Showing {filteredPatients.length} {filteredPatients.length === 1 ? 'patient' : 'patients'}
             </p>
           </div>
         </div>

@@ -25,6 +25,7 @@ import AppointmentCard from '../../components/patient/AppointmentCard';
 import PatientHistoryPanel from '../../components/doctor/PatientHistoryPanel';
 import ConsultationForm from '../../components/doctor/ConsultationForm';
 import DoctorLayout from '../../components/doctor/DoctorLayout';
+import { formatDoctorName } from '../../utils/nameHelper';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import AnimatedNumber from '../../components/common/AnimatedNumber';
@@ -229,7 +230,7 @@ const DoctorDashboard = () => {
             </span>
             <div>
               <h1 className="text-lg font-extrabold text-slate-800 leading-tight">
-                {greeting.text}, Dr. {currentUser?.full_name || 'Doctor'}
+                {greeting.text}, {formatDoctorName(currentUser?.full_name)}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
                 {currentUser?.doctor_profile?.specialization || 'MediFlow Clinician'} · {longDate}

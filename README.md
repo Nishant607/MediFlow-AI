@@ -83,7 +83,7 @@ A full-stack, AI-powered hospital management platform built as a portfolio proje
 ```bash
 # 1. Clone the repo
 git clone https://github.com/your-username/mediflow-ai.git
-cd mediflow-ai/hospital-ai
+cd mediflow-ai
 
 # 2. Create your .env from the example
 cp backend/.env.example backend/.env

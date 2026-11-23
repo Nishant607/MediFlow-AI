@@ -1,0 +1,90 @@
+# ===================================================================
+# Phase 10: Zero-Downtime Blue-Green Deployment Strategy
+# ===================================================================
+# Blue: Current active production version (v1.0.0)
+# Green: Staged new version (v2.0.0) tested and ready for traffic
+# Service: Routes traffic to Blue or Green by changing the selector
+# ===================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-blue
+  namespace: mediflow
+  labels:
+    app: backend-live
+    version: blue
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-live
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: backend-live
+        version: blue
+    spec:
+      containers:
+        - name: backend
+          image: hospital_ai_backend:v1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: APP_COLOR
+              value: "blue"
+            - name: VERSION
+              value: "1.0.0"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-green
+  namespace: mediflow
+  labels:
+    app: backend-live
+    version: green
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-live
+      version: green
+  template:
+    metadata:
+      labels:
+        app: backend-live
+        version: green
+    spec:
+      containers:
+        - name: backend
+          image: hospital_ai_backend:v2.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: APP_COLOR
+              value: "green"
+            - name: VERSION
+              value: "2.0.0"
+---
+# Production Traffic Router Service
+# To switch to Green: Change "version: blue" to "version: green" below
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-blue-green-service
+  namespace: mediflow
+  labels:
+    app: backend-live
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-live
+    version: blue
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http

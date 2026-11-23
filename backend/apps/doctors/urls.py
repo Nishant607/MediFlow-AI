@@ -3,7 +3,8 @@ from apps.doctors.views import (
     DoctorListView,
     PendingDoctorListView,
     DoctorAvailableSlotsView,
-    ApproveDoctorView
+    ApproveDoctorView,
+    RejectDoctorView
 )
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path('pending/', PendingDoctorListView.as_view(), name='doctor-pending-list'),
     path('<int:pk>/available-slots/', DoctorAvailableSlotsView.as_view(), name='doctor-available-slots'),
     path('<int:pk>/approve/', ApproveDoctorView.as_view(), name='doctor-approve'),
+    path('<int:pk>/reject/', RejectDoctorView.as_view(), name='doctor-reject'),
 ]

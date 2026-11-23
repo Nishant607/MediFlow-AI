@@ -4,11 +4,13 @@ from apps.appointments.views import (
     MyAppointmentsView,
     DoctorScheduleView,
     CancelAppointmentView,
-    DoctorPatientCountView
+    DoctorPatientCountView,
+    AdminAppointmentsListView
 )
 
 urlpatterns = [
     path('', AppointmentCreateView.as_view(), name='appointment-create'),
+    path('all/', AdminAppointmentsListView.as_view(), name='appointment-all'),
     path('mine/', MyAppointmentsView.as_view(), name='appointment-mine'),
     path('schedule/', DoctorScheduleView.as_view(), name='doctor-schedule'),
     path('my-patient-count/', DoctorPatientCountView.as_view(), name='doctor-patient-count'),

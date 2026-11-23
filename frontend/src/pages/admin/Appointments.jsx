@@ -17,29 +17,48 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { getAdminStats } from '../../api/adminApi';
+import { getAllAppointments } from '../../api/appointmentsApi';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdminComingSoon from '../../components/admin/AdminComingSoon';
 import Skeleton from '../../components/common/Skeleton';
 
+const statusBadge = (status) => {
+  switch ((status || '').toUpperCase()) {
+    case 'SCHEDULED':
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    case 'COMPLETED':
+      return 'bg-blue-50 text-[#0EA5C9] border-blue-200';
+    case 'CANCELLED':
+      return 'bg-rose-50 text-rose-700 border-rose-200';
+    default:
+      return 'bg-slate-50 text-slate-700 border-slate-200';
+  }
+};
+
 const AdminAppointmentsPage = () => {
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' | 'list'
   const [stats, setStats] = useState(null);
-  const [loadingStats, setLoadingStats] = useState(true);
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
 
   useEffect(() => {
-    const fetchStats = async () => {
-      setLoadingStats(true);
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const data = await getAdminStats();
-        setStats(data);
+        const [statsData, apptsData] = await Promise.all([
+          getAdminStats(),
+          getAllAppointments().catch(() => []),
+        ]);
+        setStats(statsData);
+        setAppointments(Array.isArray(apptsData) ? apptsData : apptsData?.results || []);
       } catch (err) {
-        console.error('Failed to load admin stats for appointments', err);
+        console.error('Failed to load admin stats or appointments', err);
       } finally {
-        setLoadingStats(false);
+        setLoading(false);
       }
     };
-    fetchStats();
+    fetchData();
   }, []);
 
   // Compute weekdays based on offset
@@ -290,21 +309,52 @@ const AdminAppointmentsPage = () => {
                         </div>
 
                         {/* 5 Day Cells */}
-                        {weekDays.map((d, colIdx) => (
-                          <div
-                            key={d.label}
-                            className={`p-2 border-r last:border-r-0 border-slate-100 relative ${
-                              d.isToday ? 'bg-sky-50/20' : ''
-                            } hover:bg-slate-50/40 transition-colors`}
-                          >
-                            {/* Empty slot placeholder indicator */}
-                            <div className="h-full w-full rounded-xl border border-dashed border-transparent hover:border-slate-200/80 transition-all flex items-center justify-center group/slot">
-                              <span className="text-[10px] text-slate-300 opacity-0 group-hover/slot:opacity-100 transition-opacity font-medium">
-                                Free Slot
-                              </span>
+                        {weekDays.map((d, colIdx) => {
+                          const slotAppts = appointments.filter(
+                            (a) => a.appointment_date === d.dateStr && (a.appointment_time || '').startsWith(time)
+                          );
+                          const appt = slotAppts[0];
+
+                          if (appt) {
+                            return (
+                              <div
+                                key={d.label}
+                                className={`p-1.5 border-r last:border-r-0 border-slate-100 relative ${
+                                  d.isToday ? 'bg-sky-50/20' : ''
+                                }`}
+                              >
+                                <div className="h-full w-full rounded-xl bg-white border border-slate-200 p-2 shadow-2xs flex flex-col justify-between hover:shadow-xs transition-shadow">
+                                  <div>
+                                    <p className="font-bold text-slate-800 text-[11px] truncate">
+                                      {appt.patient_detail?.user_full_name || 'Patient'}
+                                    </p>
+                                    <p className="text-[10px] text-slate-500 truncate">
+                                      {appt.doctor_detail?.user_full_name ? `Dr. ${appt.doctor_detail.user_full_name}` : 'Doctor'}
+                                    </p>
+                                  </div>
+                                  <span className={`self-start text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${statusBadge(appt.status)}`}>
+                                    {appt.status}
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <div
+                              key={d.label}
+                              className={`p-2 border-r last:border-r-0 border-slate-100 relative ${
+                                d.isToday ? 'bg-sky-50/20' : ''
+                              } hover:bg-slate-50/40 transition-colors`}
+                            >
+                              <div className="h-full w-full rounded-xl border border-dashed border-transparent hover:border-slate-200/80 transition-all flex items-center justify-center group/slot">
+                                <span className="text-[10px] text-slate-300 opacity-0 group-hover/slot:opacity-100 transition-opacity font-medium">
+                                  Free Slot
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     );
                   })}
@@ -351,28 +401,66 @@ const AdminAppointmentsPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td colSpan={7} className="px-5 py-16 text-center">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center">
-                          <CalendarCheck2 className="w-6 h-6 text-slate-300" />
+                  {loading ? (
+                    [...Array(4)].map((_, i) => (
+                      <tr key={i} className="border-b border-slate-100">
+                        <td colSpan={7} className="px-5 py-4">
+                          <div className="h-4 bg-slate-100 rounded animate-pulse" />
+                        </td>
+                      </tr>
+                    ))
+                  ) : appointments.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="px-5 py-16 text-center">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+                            <CalendarCheck2 className="w-6 h-6 text-slate-300" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-slate-700 mb-0.5">
+                              No appointments scheduled yet
+                            </p>
+                            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                              Appointment consultations will automatically populate
+                              here once booked through MediFlow.
+                            </p>
+                          </div>
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-bold uppercase tracking-wide mt-1">
+                            <Clock className="w-3 h-3" />
+                            List View Synchronized
+                          </span>
                         </div>
-                        <div>
-                          <p className="text-sm font-bold text-slate-700 mb-0.5">
-                            No appointments scheduled for this week
-                          </p>
-                          <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                            Appointment consultations will automatically populate
-                            here once booked through MediFlow.
-                          </p>
-                        </div>
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-bold uppercase tracking-wide mt-1">
-                          <Clock className="w-3 h-3" />
-                          List View Synchronized
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  ) : (
+                    appointments.map((a) => (
+                      <tr key={a.id} className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
+                        <td className="px-5 py-3.5 font-bold text-slate-900 whitespace-nowrap">
+                          {a.appointment_date} • {a.appointment_time}
+                        </td>
+                        <td className="px-5 py-3.5 font-semibold text-slate-800">
+                          {a.patient_detail?.user_full_name || 'Patient'}
+                        </td>
+                        <td className="px-5 py-3.5 text-slate-600">
+                          {a.doctor_detail?.user_full_name ? `Dr. ${a.doctor_detail.user_full_name}` : 'Doctor'}
+                        </td>
+                        <td className="px-5 py-3.5 text-slate-500">
+                          {a.doctor_detail?.department_name || 'General'}
+                        </td>
+                        <td className="px-5 py-3.5 text-slate-500">
+                          {a.reason || 'Consultation'}
+                        </td>
+                        <td className="px-5 py-3.5">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadge(a.status)}`}>
+                            {a.status}
+                          </span>
+                        </td>
+                        <td className="px-5 py-3.5 text-slate-400 text-[11px]">
+                          #{a.id}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

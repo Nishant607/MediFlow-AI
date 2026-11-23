@@ -28,6 +28,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import AdminComingSoon from '../../components/admin/AdminComingSoon';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
+import { formatDoctorName } from '../../utils/nameHelper';
 import Badge from '../../components/common/Badge';
 
 // Stat Card with left accent border
@@ -279,7 +280,7 @@ const AdminConsultationPage = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-slate-700 font-medium">
-                        Dr. {item.doctor_detail?.user_full_name || 'Assigned Physician'}
+                        {formatDoctorName(item.doctor_detail?.user_full_name, 'Assigned Physician')}
                       </td>
                       <td className="px-6 py-4 text-slate-600">
                         <div className="flex items-center gap-1.5">
@@ -381,7 +382,7 @@ const AdminConsultationPage = () => {
                         Attending Physician
                       </span>
                       <p className="font-bold text-slate-800 text-sm">
-                        Dr. {selectedConsultation.doctor_detail?.user_full_name || 'Physician'}
+                        {formatDoctorName(selectedConsultation.doctor_detail?.user_full_name, 'Physician')}
                       </p>
                       <p className="text-[11px] text-slate-500">
                         Department of Clinical Medicine

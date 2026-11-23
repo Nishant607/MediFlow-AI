@@ -22,8 +22,10 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { updateCurrentUser } from '../../api/authApi';
 import DoctorLayout from '../../components/doctor/DoctorLayout';
 import useProfilePhoto from '../../hooks/useProfilePhoto';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 /* ── Toggle Switch Component ──────────────────────────────── */
 const ToggleSwitch = ({ checked, onChange, disabled = false }) => (
@@ -161,6 +163,13 @@ const DoctorSettingsPage = () => {
 
     try {
       localStorage.setItem(storageKey, JSON.stringify(payload));
+      updateCurrentUser({
+        full_name: updatedFullName,
+        phone,
+        specialization,
+        available_time: availableTime,
+      }).catch((err) => console.error('Backend doctor profile sync failed', err));
+
       if (currentUser && setCurrentUser) {
         setCurrentUser({
           ...currentUser,
@@ -339,7 +348,7 @@ const DoctorSettingsPage = () => {
 
               <div>
                 <h2 className="text-lg font-bold text-slate-900">
-                  Dr. {firstName} {lastName}
+                  {formatDoctorName(`${firstName} ${lastName}`)}
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">{currentUser?.email || 'doctor@mediflow.ai'}</p>
                 <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E0F4F9] text-[#0B7EA0] border border-[#0EA5C9]/20">

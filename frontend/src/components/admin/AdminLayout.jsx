@@ -22,6 +22,8 @@ import {
   User,
   Activity,
   ChevronRight,
+  BookOpen,
+  ScrollText,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from '../common/NotificationBell';
@@ -144,6 +146,18 @@ const AdminLayout = ({ children }) => {
       label: 'Staff Report',
       icon: FileBarChart2,
       to: '/admin/staff-report',
+      real: true,
+    },
+    {
+      label: 'Knowledge Base',
+      icon: BookOpen,
+      to: '/admin/knowledge-base',
+      real: true,
+    },
+    {
+      label: 'Audit Logs',
+      icon: ScrollText,
+      to: '/admin/audit-logs',
       real: true,
     },
   ];

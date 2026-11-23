@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
+from django.db.models import Q
 from apps.users.permissions import IsPatient, IsAdmin, IsApprovedDoctor
 from apps.audit.models import AuditLog
 from apps.audit.signals import get_client_ip
@@ -28,7 +29,7 @@ from apps.patients.models import PatientProfile
 
 
 class ChatView(views.APIView):
-    permission_classes = [IsPatient]
+    permission_classes = [IsPatient | IsApprovedDoctor]
     throttle_classes = [AIChatThrottle]
 
     def post(self, request):
@@ -36,10 +37,11 @@ class ChatView(views.APIView):
         serializer.is_valid(raise_exception=True)
         user_message = serializer.validated_data['message']
 
-        patient_profile = request.user.patient_profile
+        patient_profile = getattr(request.user, 'patient_profile', None)
 
         # Save user message
         Message.objects.create(
+            user=request.user,
             patient=patient_profile,
             role='user',
             content=user_message
@@ -52,10 +54,16 @@ class ChatView(views.APIView):
         else:
             chunks = get_relevant_chunks(user_message)
             if not chunks:
-                reply = (
-                    "I don't have specific information about that in our hospital records. "
-                    "Please contact the hospital directly for assistance."
-                )
+                if getattr(request.user, 'role', '') == 'doctor':
+                    reply = (
+                        "No specific hospital protocol or guideline found for this query in the knowledge base. "
+                        "Please refer to standard clinical protocols."
+                    )
+                else:
+                    reply = (
+                        "I don't have specific information about that in our hospital records. "
+                        "Please contact the hospital directly for assistance."
+                    )
                 grounded = False
             else:
                 reply = get_llm_response(chunks, user_message)
@@ -63,6 +71,7 @@ class ChatView(views.APIView):
 
         # Save assistant message
         Message.objects.create(
+            user=request.user,
             patient=patient_profile,
             role='assistant',
             content=reply
@@ -78,11 +87,14 @@ class ChatView(views.APIView):
 
 
 class MessageHistoryView(generics.ListAPIView):
-    permission_classes = [IsPatient]
+    permission_classes = [IsPatient | IsApprovedDoctor]
     serializer_class = MessageSerializer
 
     def get_queryset(self):
-        return Message.objects.filter(patient=self.request.user.patient_profile)
+        user = self.request.user
+        if hasattr(user, 'patient_profile') and user.patient_profile:
+            return Message.objects.filter(Q(user=user) | Q(patient=user.patient_profile)).order_by('created_at')
+        return Message.objects.filter(user=user).order_by('created_at')
 
 
 class DocumentListCreateView(views.APIView):
@@ -184,11 +196,20 @@ class DocumentDeleteView(views.APIView):
 
 
 class ReportSummaryView(views.APIView):
-    permission_classes = [IsPatient]
+    permission_classes = [IsPatient | IsApprovedDoctor]
 
     def post(self, request, report_id):
-        patient_profile = request.user.patient_profile
-        report = get_object_or_404(MedicalReport, id=report_id, patient=patient_profile)
+        if getattr(request.user, 'role', '') == 'patient':
+            patient_profile = getattr(request.user, 'patient_profile', None)
+            report = get_object_or_404(MedicalReport, id=report_id, patient=patient_profile)
+        else:
+            report = get_object_or_404(MedicalReport, id=report_id)
+            if not user_can_access_patient_records(request.user, report.patient):
+                return Response(
+                    {"detail": "You do not have permission to access this report."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
         summary = summarize_report(report)
         return Response(
             {

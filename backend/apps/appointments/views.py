@@ -91,6 +91,7 @@ class DoctorScheduleView(generics.ListAPIView):
     def get_queryset(self):
         doctor_profile = self.request.user.doctor_profile
         date_str = self.request.query_params.get('date')
+        status_param = self.request.query_params.get('status')
 
         if date_str:
             try:
@@ -100,11 +101,39 @@ class DoctorScheduleView(generics.ListAPIView):
         else:
             target_date = timezone.localtime().date()
 
-        return Appointment.objects.filter(
+        queryset = Appointment.objects.filter(
             doctor=doctor_profile,
-            appointment_date=target_date,
-            status='SCHEDULED'
-        ).select_related('patient__user').order_by('appointment_time')
+            appointment_date=target_date
+        ).select_related('patient__user', 'doctor__user', 'doctor__department')
+
+        if status_param and status_param.upper() != 'ALL':
+            queryset = queryset.filter(status=status_param.upper())
+        else:
+            queryset = queryset.exclude(status='CANCELLED')
+
+        return queryset.order_by('appointment_time')
+
+
+class AdminAppointmentsListView(generics.ListAPIView):
+    permission_classes = [IsAdmin]
+    serializer_class = AppointmentSerializer
+
+    def get_queryset(self):
+        queryset = Appointment.objects.select_related(
+            'doctor__user', 'doctor__department', 'patient__user'
+        ).order_by('-appointment_date', 'appointment_time')
+
+        status_param = self.request.query_params.get('status')
+        date_str = self.request.query_params.get('date')
+        if status_param:
+            queryset = queryset.filter(status=status_param.upper())
+        if date_str:
+            try:
+                d = datetime.strptime(date_str, '%Y-%m-%d').date()
+                queryset = queryset.filter(appointment_date=d)
+            except ValueError:
+                pass
+        return queryset
 
 
 class CancelAppointmentView(views.APIView):

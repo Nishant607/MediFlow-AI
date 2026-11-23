@@ -21,6 +21,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { updateCurrentUser } from '../../api/authApi';
 import PageWrapper from '../../components/common/PageWrapper';
 import useProfilePhoto from '../../hooks/useProfilePhoto';
 
@@ -148,6 +149,13 @@ const PatientSettingsPage = () => {
 
     try {
       localStorage.setItem(storageKey, JSON.stringify(payload));
+      updateCurrentUser({
+        full_name: updatedFullName,
+        phone,
+        dob,
+        gender,
+      }).catch((err) => console.error('Backend profile sync failed', err));
+
       if (currentUser && setCurrentUser) {
         setCurrentUser({
           ...currentUser,

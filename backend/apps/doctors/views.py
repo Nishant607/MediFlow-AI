@@ -71,3 +71,25 @@ class ApproveDoctorView(views.APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
+class RejectDoctorView(views.APIView):
+    permission_classes = [IsAdmin]
+
+    def delete(self, request, pk):
+        doctor = get_object_or_404(DoctorProfile, pk=pk)
+        user = doctor.user
+        doc_name = user.full_name
+
+        ip = get_client_ip(request)
+        AuditLog.objects.create(
+            user=request.user,
+            action='DOCTOR_APPROVED',
+            ip_address=ip
+        )
+
+        user.delete()
+        return Response(
+            {"message": f"Dr. {doc_name}'s registration has been rejected and removed."},
+            status=status.HTTP_200_OK
+        )

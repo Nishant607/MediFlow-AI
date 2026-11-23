@@ -25,7 +25,8 @@ import {
   CornerDownLeft,
 } from 'lucide-react';
 import { listDoctors } from '../../api/doctorsApi';
-import { getAllInvoices } from '../../api/billingApi';
+import { formatDoctorName } from '../../utils/nameHelper';
+import { getAllInvoices, getMyInvoices } from '../../api/billingApi';
 import { getEmergencyContacts } from '../../api/departmentsApi';
 import { useAuth } from '../../context/AuthContext';
 
@@ -56,9 +57,16 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
     const loadIndex = async () => {
       setLoadingData(true);
       try {
+        const invoicePromise =
+          role === 'admin'
+            ? getAllInvoices().catch(() => [])
+            : role === 'patient'
+            ? getMyInvoices().catch(() => [])
+            : Promise.resolve([]);
+
         const [docsRes, invRes, emergRes] = await Promise.all([
           listDoctors().catch(() => []),
-          getAllInvoices().catch(() => []),
+          invoicePromise,
           getEmergencyContacts().catch(() => []),
         ]);
 
@@ -161,12 +169,19 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
         results.push({
           id: `doc-${doc.id}`,
           type: 'Staff & Doctors',
-          title: `Dr. ${name}`,
+          title: formatDoctorName(name),
           subtitle: `${spec} · ${dept || 'General'}`,
           icon: Stethoscope,
           badge: doc.is_approved ? 'Verified' : 'Pending',
           badgeColor: doc.is_approved ? 'text-emerald-700 bg-emerald-50' : 'text-amber-700 bg-amber-50',
-          action: () => navigate(role === 'doctor' ? '/doctor/patients' : '/admin/staff'),
+          action: () =>
+            navigate(
+              role === 'patient'
+                ? '/patient/book-appointment'
+                : role === 'doctor'
+                ? '/doctor/schedule'
+                : '/admin/staff'
+            ),
         });
       }
     });
@@ -187,11 +202,11 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
           id: `inv-${inv.id}`,
           type: 'Invoices & Billing',
           title: `Invoice #${inv.id} — ${patient || 'Patient'}`,
-          subtitle: `Dr. ${doctor || 'Doctor'} · ${inv.appointment_date || 'Visit'} · ₹${inv.total_amount}`,
+          subtitle: `${formatDoctorName(doctor)} · ${inv.appointment_date || 'Visit'} · ₹${inv.total_amount}`,
           icon: Receipt,
           badge: inv.status,
           badgeColor: inv.status === 'PAID' ? 'text-emerald-700 bg-emerald-50' : 'text-amber-700 bg-amber-50',
-          action: () => navigate('/admin/billing'),
+          action: () => navigate(role === 'patient' ? '/patient/billing' : '/admin/billing'),
         });
       }
     });

@@ -24,6 +24,7 @@ import Badge from '../../components/common/Badge';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import ClevelandClinicSections from '../../components/patient/ClevelandClinicSections';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -124,109 +125,154 @@ const PatientDashboard = () => {
   return (
     <PageWrapper className="p-4 sm:p-6 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
-        {/* HERO BANNER - Exact Match to Reference Design */}
+        {/* HERO BANNER - Modern 3D Enterprise Medical Experience */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-clinic overflow-hidden bg-[#E9E8EC]"
+          className="relative rounded-3xl overflow-hidden shadow-xl bg-gradient-to-br from-[#0c2a4a] via-[#103d68] to-[#081e33] border border-white/10 text-white"
         >
-          {/* Top Banner with Background Image & Doctor */}
-          <div 
-            className="relative w-full bg-no-repeat bg-right bg-cover sm:bg-contain lg:bg-cover min-h-[340px] sm:min-h-[380px] lg:min-h-[400px] flex items-center"
-            style={{
-              backgroundImage: "url('/hero_top_bg.png')",
-              backgroundColor: '#E8E7EB',
-            }}
-          >
-            {/* Subtle soft gradient on mobile/tablet to guarantee text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#EAE9ED] via-[#EAE9ED]/85 to-transparent sm:via-[#EAE9ED]/60 lg:via-transparent pointer-events-none" />
+          {/* Ambient 3D Glowing Orbs */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#0EA5C9]/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
 
+          <div className="relative z-10 p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Content Column */}
-            <div className="relative z-10 p-6 sm:p-10 lg:p-14 max-w-xl">
-              {/* Personalized Welcome Badge + Tagline */}
-              <div className="flex flex-wrap items-center gap-2.5 mb-3.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/95 text-[#005A9C] border border-blue-200/70 shadow-2xs">
-                  <span className="w-2 h-2 rounded-full bg-[#007ABF] animate-pulse" />
+            <div className="lg:col-span-7 space-y-4">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/15 text-white border border-white/20 backdrop-blur-md shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   Welcome, {currentUser?.full_name || 'Patient'}
                 </span>
-                <span className="text-xs sm:text-sm font-extrabold tracking-[0.22em] text-[#0084C7] uppercase font-sans">
+                <span className="text-xs font-bold tracking-[0.2em] text-[#0EA5C9] uppercase">
                   CARING FOR LIFE
                 </span>
               </div>
 
-              {/* Big Serif Headline */}
-              <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-bold font-serif text-[#1F2B6C] leading-[1.15] mb-6 tracking-tight">
-                Leading the Way <br />
-                in Medical Excellence
+              <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold tracking-tight leading-[1.15] text-white">
+                Leading the Way in <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 via-teal-200 to-white">
+                  AI-Powered Healthcare
+                </span>
               </h1>
 
-              {/* Connected CTA Button: Scrolls down to Services */}
-              <div>
-                <a
-                  href="#services-grid"
-                  className="inline-flex items-center gap-2 bg-[#BFD2F8] hover:bg-[#A9C3F5] text-[#1F2B6C] px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all shadow-xs"
+              <p className="text-slate-200 text-sm sm:text-base leading-relaxed max-w-xl">
+                Experience seamless care: book appointments with verified specialists, consult the 24/7 AI Health Assistant, and securely access your medical records and invoices in one place.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Link
+                  to="/patient/book-appointment"
+                  className="inline-flex items-center gap-2 bg-[#0EA5C9] hover:bg-[#0B7EA0] text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
                 >
-                  <span>Our Services</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
+                  <CalendarPlus className="w-4 h-4" />
+                  <span>Book an Appointment</span>
+                </Link>
+                <Link
+                  to="/patient/ai-assistant"
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md px-5 py-3 rounded-xl text-sm font-bold transition-all"
+                >
+                  <Bot className="w-4 h-4 text-[#0EA5C9]" />
+                  <span>AI Patient Assistant</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: 3D Live Health Snapshot Card */}
+            <div className="lg:col-span-5">
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 p-5 sm:p-6 space-y-4 shadow-xl">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-[#0EA5C9]/30 flex items-center justify-center text-[#0EA5C9]">
+                      <HeartPulse className="w-4 h-4 text-[#0EA5C9] animate-pulse" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white">Clinical Vitals</h4>
+                      <p className="text-[10px] text-slate-300">Monitored Patient Profile</p>
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                    Normal Active
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <span className="text-[10px] text-slate-300 block">Upcoming Checkups</span>
+                    <span className="text-lg font-extrabold text-white">
+                      {apptLoading ? '—' : `${upcomingCount} Visits`}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                    <span className="text-[10px] text-slate-300 block">Health Records</span>
+                    <span className="text-lg font-extrabold text-[#0EA5C9]">100% Synced</span>
+                  </div>
+                </div>
+
+                <Link
+                  to="/patient/emergency"
+                  className="flex items-center justify-between p-3 rounded-xl bg-rose-500/20 border border-rose-400/30 text-rose-200 hover:bg-rose-500/30 transition-colors text-xs font-bold"
+                >
+                  <span className="flex items-center gap-2">
+                    <AlertOctagon className="w-4 h-4 text-rose-400" />
+                    24/7 Immediate Emergency Help
+                  </span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* DOCKED BOTTOM ACTION CARDS (3 Connected Buttons in Exact Color Palette) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 w-full border-t border-slate-200/90">
-            {/* Card 1: Dark Navy Blue (#1F2B6C) */}
+          {/* DOCKED BOTTOM ACTION CARDS */}
+          <div className="grid grid-cols-1 md:grid-cols-3 border-t border-white/10 bg-black/20 backdrop-blur-md">
             <Link
               to="/patient/book-appointment"
-              className="bg-[#1F2B6C] hover:bg-[#182358] text-white p-5 sm:p-6 transition-all flex items-center justify-between group cursor-pointer"
+              className="p-5 transition-all flex items-center justify-between group hover:bg-white/10 border-b md:border-b-0 md:border-r border-white/10"
             >
               <div>
-                <span className="font-bold text-sm sm:text-base block group-hover:translate-x-1 transition-transform">
+                <span className="font-bold text-sm block group-hover:text-[#0EA5C9] transition-colors">
                   Book an Appointment
                 </span>
-                <span className="text-[11px] text-white/70">
+                <span className="text-[11px] text-slate-300">
                   Select doctor &amp; preferred time slot
                 </span>
               </div>
-              <div className="p-2.5 rounded-xl border border-white/30 bg-white/10 text-white group-hover:scale-110 transition-transform shrink-0 ml-3">
-                <Calendar className="w-6 h-6 sm:w-7 sm:h-7" />
+              <div className="p-2.5 rounded-xl bg-[#0EA5C9]/20 text-[#0EA5C9] border border-[#0EA5C9]/30 group-hover:scale-110 transition-transform shrink-0 ml-3">
+                <Calendar className="w-5 h-5" />
               </div>
             </Link>
 
-            {/* Card 2: Pastel Light Blue (#BFD2F8) */}
             <Link
               to="/patient/book-appointment"
-              className="bg-[#BFD2F8] hover:bg-[#AAC5F5] text-[#1F2B6C] p-5 sm:p-6 transition-all flex items-center justify-between group cursor-pointer border-t md:border-t-0 md:border-l md:border-r border-blue-200"
+              className="p-5 transition-all flex items-center justify-between group hover:bg-white/10 border-b md:border-b-0 md:border-r border-white/10"
             >
               <div>
-                <span className="font-bold text-sm sm:text-base block group-hover:translate-x-1 transition-transform">
-                  Our Doctors &amp; Specialists
+                <span className="font-bold text-sm block group-hover:text-[#0EA5C9] transition-colors">
+                  Our Specialists
                 </span>
-                <span className="text-[11px] text-[#1F2B6C]/70">
+                <span className="text-[11px] text-slate-300">
                   Browse clinical departments
                 </span>
               </div>
-              <div className="p-2.5 rounded-xl border border-[#1F2B6C]/25 bg-white/40 text-[#1F2B6C] group-hover:scale-110 transition-transform shrink-0 ml-3">
-                <Users className="w-6 h-6 sm:w-7 sm:h-7" />
+              <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 group-hover:scale-110 transition-transform shrink-0 ml-3">
+                <Users className="w-5 h-5" />
               </div>
             </Link>
 
-            {/* Card 3: Vibrant Cyan Blue (#159EEC) */}
             <Link
               to="/patient/billing"
-              className="bg-[#159EEC] hover:bg-[#0D8CD5] text-white p-5 sm:p-6 transition-all flex items-center justify-between group cursor-pointer"
+              className="p-5 transition-all flex items-center justify-between group hover:bg-white/10"
             >
               <div>
-                <span className="font-bold text-sm sm:text-base block group-hover:translate-x-1 transition-transform">
+                <span className="font-bold text-sm block group-hover:text-[#0EA5C9] transition-colors">
                   Invoices &amp; Billing
                 </span>
-                <span className="text-[11px] text-white/80">
+                <span className="text-[11px] text-slate-300">
                   View consultation fees &amp; receipts
                 </span>
               </div>
-              <div className="p-2.5 rounded-xl border border-white/30 bg-white/15 text-white group-hover:scale-110 transition-transform shrink-0 ml-3">
-                <CreditCard className="w-6 h-6 sm:w-7 sm:h-7" />
+              <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 group-hover:scale-110 transition-transform shrink-0 ml-3">
+                <CreditCard className="w-5 h-5" />
               </div>
             </Link>
           </div>
@@ -369,7 +415,7 @@ const PatientDashboard = () => {
                         </span>
                       </div>
                       <h4 className="text-sm font-bold text-slate-900 truncate">
-                        Dr. {appt.doctor_detail?.user_full_name || 'Specialist'}
+                        {formatDoctorName(appt.doctor_detail?.user_full_name, 'Specialist')}
                       </h4>
                       <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
                         <Stethoscope className="w-3.5 h-3.5 text-[#0EA5C9] shrink-0" />
@@ -428,13 +474,13 @@ const PatientDashboard = () => {
           <h2 className="text-2xl sm:text-3xl font-bold font-display text-slate-800 tracking-tight">
             Patient Care &amp; Clinical Services
           </h2>
-          <div className="w-10 h-1 bg-[#007ABF] rounded-full mx-auto" />
+          <div className="w-10 h-1 bg-[#0EA5C9] rounded-full mx-auto" />
           <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
             Access your appointments, diagnostic reports, AI support, and emergency services.
           </p>
         </div>
 
-        {/* Action Cards Grid */}
+        {/* Action Cards Grid - 3D Hover & Unified Styling */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -444,22 +490,22 @@ const PatientDashboard = () => {
           {/* Card 1: Book an Appointment */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-clinic hover:shadow-clinic-hover flex flex-col justify-between space-y-5 transition-all"
+            whileHover={{ y: -6, scale: 1.01 }}
+            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-[#0EA5C9]/40 flex flex-col justify-between space-y-5 transition-all"
           >
             <div>
-              <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#005A9C] mb-4 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-[#E0F4F9] flex items-center justify-center text-[#0EA5C9] mb-4 shadow-2xs">
                 <CalendarPlus className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900 font-display">Book an Appointment</h3>
-              <div className="w-8 h-1 bg-[#005A9C] rounded-full my-2" />
+              <div className="w-8 h-1 bg-[#0EA5C9] rounded-full my-2" />
               <p className="text-slate-500 text-xs sm:text-sm leading-relaxed mt-1.5">
                 Find specialists, choose your preferred date, and book available clinic slots.
               </p>
             </div>
             <Link
               to="/patient/book-appointment"
-              className="inline-flex items-center gap-2 bg-[#005A9C] hover:bg-[#00477D] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow w-fit mt-2"
+              className="inline-flex items-center gap-2 bg-[#0EA5C9] hover:bg-[#0B7EA0] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow w-fit mt-2"
             >
               Book Now &rarr;
             </Link>
@@ -468,12 +514,12 @@ const PatientDashboard = () => {
           {/* Card 2: My Appointments */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-clinic hover:shadow-clinic-hover flex flex-col justify-between space-y-5 transition-all"
+            whileHover={{ y: -6, scale: 1.01 }}
+            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-[#0EA5C9]/40 flex flex-col justify-between space-y-5 transition-all"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#005A9C] shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center text-sky-600 shadow-2xs">
                   <Calendar className="w-6 h-6" />
                 </div>
                 <Badge variant="brand" dot>
@@ -481,7 +527,7 @@ const PatientDashboard = () => {
                 </Badge>
               </div>
               <h3 className="text-lg font-bold text-slate-900 font-display">My Appointments</h3>
-              <div className="w-8 h-1 bg-[#005A9C] rounded-full my-2" />
+              <div className="w-8 h-1 bg-[#0EA5C9] rounded-full my-2" />
               <p className="text-slate-500 text-xs sm:text-sm leading-relaxed mt-1.5">
                 View your upcoming doctor visits, past medical history, or cancel scheduled appointments.
               </p>
@@ -497,22 +543,22 @@ const PatientDashboard = () => {
           {/* Card 3: Medical Records */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-clinic hover:shadow-clinic-hover flex flex-col justify-between space-y-5 transition-all"
+            whileHover={{ y: -6, scale: 1.01 }}
+            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-emerald-300 flex flex-col justify-between space-y-5 transition-all"
           >
             <div>
-              <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-[#00843D] mb-4 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4 shadow-2xs">
                 <FileText className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900 font-display">Medical Records</h3>
-              <div className="w-8 h-1 bg-[#00843D] rounded-full my-2" />
+              <div className="w-8 h-1 bg-emerald-500 rounded-full my-2" />
               <p className="text-slate-500 text-xs sm:text-sm leading-relaxed mt-1.5">
                 Upload lab reports, download medical files, and view your doctor prescriptions.
               </p>
             </div>
             <Link
               to="/patient/medical-records"
-              className="inline-flex items-center gap-2 bg-[#00843D] hover:bg-[#006B31] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow w-fit mt-2"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow w-fit mt-2"
             >
               View &amp; Upload Records &rarr;
             </Link>
@@ -521,15 +567,15 @@ const PatientDashboard = () => {
           {/* Card 4: Billing & Invoices */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-clinic hover:shadow-clinic-hover flex flex-col justify-between space-y-5 transition-all"
+            whileHover={{ y: -6, scale: 1.01 }}
+            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-indigo-300 flex flex-col justify-between space-y-5 transition-all"
           >
             <div>
-              <div className="w-12 h-12 rounded-full bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-700 mb-4 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-4 shadow-2xs">
                 <CreditCard className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900 font-display">Billing &amp; Invoices</h3>
-              <div className="w-8 h-1 bg-purple-600 rounded-full my-2" />
+              <div className="w-8 h-1 bg-indigo-500 rounded-full my-2" />
               <p className="text-slate-500 text-xs sm:text-sm leading-relaxed mt-1.5">
                 Pay consultation fees, view transaction history, and download invoice details.
               </p>
@@ -545,22 +591,22 @@ const PatientDashboard = () => {
           {/* Card 5: AI Assistant */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-clinic hover:shadow-clinic-hover flex flex-col justify-between space-y-5 transition-all"
+            whileHover={{ y: -6, scale: 1.01 }}
+            className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-[#0EA5C9]/40 flex flex-col justify-between space-y-5 transition-all"
           >
             <div>
-              <div className="w-12 h-12 rounded-full bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-700 mb-4 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-[#E0F4F9] flex items-center justify-center text-[#0EA5C9] mb-4 shadow-2xs">
                 <Bot className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900 font-display">AI Assistant</h3>
-              <div className="w-8 h-1 bg-sky-600 rounded-full my-2" />
+              <div className="w-8 h-1 bg-[#0EA5C9] rounded-full my-2" />
               <p className="text-slate-500 text-xs sm:text-sm leading-relaxed mt-1.5">
                 Ask about MediFlow policies, visiting hours, insurance coverage, and guidelines.
               </p>
             </div>
             <Link
               to="/patient/ai-assistant"
-              className="inline-flex items-center gap-2 bg-sky-700 hover:bg-sky-800 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow w-fit mt-2"
+              className="inline-flex items-center gap-2 bg-[#0EA5C9] hover:bg-[#0B7EA0] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow w-fit mt-2"
             >
               Chat with AI &rarr;
             </Link>
@@ -569,11 +615,11 @@ const PatientDashboard = () => {
           {/* Card 6: Emergency Help */}
           <motion.div
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-rose-50/70 p-6 sm:p-7 rounded-2xl border border-rose-200 shadow-clinic hover:shadow-clinic-hover flex flex-col justify-between space-y-5 transition-all"
+            whileHover={{ y: -6, scale: 1.01 }}
+            className="bg-rose-50/70 p-6 sm:p-7 rounded-2xl border border-rose-200 shadow-sm hover:shadow-xl hover:border-rose-300 flex flex-col justify-between space-y-5 transition-all"
           >
             <div>
-              <div className="w-12 h-12 rounded-full bg-rose-100 border border-rose-200 flex items-center justify-center text-rose-700 mb-4 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center text-rose-700 mb-4 shadow-2xs">
                 <AlertOctagon className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-rose-800 font-display flex items-center gap-2">

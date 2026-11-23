@@ -120,20 +120,24 @@ const AdminClinicPage = () => {
     );
   });
 
-  const handleCreateDepartment = (e) => {
+  const handleCreateDepartment = async (e) => {
     e.preventDefault();
     if (!newDeptName.trim()) return;
-    // Add locally for administrative preview
-    const newDept = {
-      id: Date.now(),
-      name: newDeptName.trim(),
-      description: newDeptDesc.trim() || 'General medical care unit.',
-    };
-    setDepartments((prev) => [newDept, ...prev]);
-    setShowAddModal(false);
-    setNewDeptName('');
-    setNewDeptDesc('');
-    triggerToast(`Department "${newDept.name}" created successfully!`);
+    try {
+      const res = await axiosClient.post('/departments/', {
+        name: newDeptName.trim(),
+        description: newDeptDesc.trim() || 'General medical care unit.',
+      });
+      setDepartments((prev) => [res.data, ...prev]);
+      setShowAddModal(false);
+      setNewDeptName('');
+      setNewDeptDesc('');
+      triggerToast(`Department "${res.data.name}" created successfully!`);
+    } catch (err) {
+      console.error('Failed to create department', err);
+      const errDetail = err.response?.data?.name?.[0] || 'Failed to create department on server.';
+      triggerToast(errDetail);
+    }
   };
 
   return (

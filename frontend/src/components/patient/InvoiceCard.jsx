@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Receipt, CreditCard, Calendar, Stethoscope, CheckCircle2 } from 'lucide-react';
 import Badge from '../common/Badge';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 const InvoiceCard = ({ invoice, onPay, isPaying }) => {
   const isPaid = invoice.status === 'PAID';
@@ -54,7 +55,7 @@ const InvoiceCard = ({ invoice, onPay, isPaying }) => {
           <Stethoscope className="w-3.5 h-3.5 text-slate-400" />
           <span className="text-slate-500">Doctor:</span>{' '}
           <span className="font-semibold text-slate-800">
-            Dr. {invoice.doctor_detail?.user_full_name}
+            {formatDoctorName(invoice.doctor_detail?.user_full_name)}
           </span>{' '}
           <span className="text-slate-500">({invoice.doctor_detail?.specialization})</span>
         </div>

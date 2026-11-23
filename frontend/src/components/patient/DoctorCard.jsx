@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Stethoscope, Award, Briefcase, Check, Sparkles } from 'lucide-react';
 import Badge from '../common/Badge';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 const DoctorCard = ({ doctor, isSelected, onSelect }) => {
   const user = doctor.user_detail || doctor.user || {};
@@ -49,7 +50,7 @@ const DoctorCard = ({ doctor, isSelected, onSelect }) => {
           </div>
           <div>
             <h3 className="text-base sm:text-lg font-bold text-slate-900 font-display">
-              Dr. {user.full_name || 'Medical Specialist'}
+              {formatDoctorName(user.full_name, 'Medical Specialist')}
             </h3>
             <p className="text-[#005A9C] font-medium text-xs mt-0.5 flex items-center gap-1.5">
               <Stethoscope className="w-3.5 h-3.5 text-[#005A9C]" />

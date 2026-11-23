@@ -20,6 +20,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from '../common/NotificationBell';
 import GlobalSearchModal from '../common/GlobalSearchModal';
+import { formatDoctorName, getDoctorGreeting } from '../../utils/nameHelper';
 
 /* ─── brand accent colour ─────────────────────────────────── */
 const ACCENT = '#0EA5C9';
@@ -273,7 +274,7 @@ const DoctorLayout = ({ children }) => {
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <span className="text-xl sm:text-2xl" role="img" aria-label="wave">👋</span>
             <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight truncate">
-              Hello, Dr. {fullName.split(' ')[0]}!
+              Hello, {getDoctorGreeting(fullName)}!
             </h1>
           </div>
 
@@ -309,7 +310,7 @@ const DoctorLayout = ({ children }) => {
               </div>
               <div className="hidden sm:flex flex-col text-left min-w-0">
                 <span className="text-[13px] font-semibold text-slate-800 leading-tight truncate max-w-[120px]">
-                  Dr. {fullName}
+                  {formatDoctorName(fullName)}
                 </span>
                 <span className="text-[11px] text-slate-400 leading-tight truncate max-w-[120px]">
                   {email}
@@ -330,7 +331,7 @@ const DoctorLayout = ({ children }) => {
                   className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden z-50"
                 >
                   <div className="px-4 py-3 border-b border-slate-100">
-                    <p className="text-xs font-bold text-slate-800 truncate">Dr. {fullName}</p>
+                    <p className="text-xs font-bold text-slate-800 truncate">{formatDoctorName(fullName)}</p>
                     <p className="text-[11px] text-slate-400 truncate">{email}</p>
                   </div>
                   <button

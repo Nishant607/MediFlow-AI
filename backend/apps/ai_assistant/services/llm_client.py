@@ -29,7 +29,7 @@ def get_llm_response(context_chunks: list[str], user_message: str, system_prompt
     try:
         client = Groq(api_key=api_key)
         response = client.chat.completions.create(
-            model="openai/gpt-oss-20b",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": actual_system_prompt},
                 {"role": "user", "content": user_content},

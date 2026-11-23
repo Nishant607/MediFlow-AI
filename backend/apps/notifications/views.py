@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 from rest_framework import generics, status, views
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -54,12 +55,21 @@ class TriggerRemindersView(views.APIView):
     permission_classes = [IsAdmin]
 
     def post(self, request):
-        task_res = send_appointment_reminders.delay()
-        count = task_res.get() if hasattr(task_res, 'get') else task_res
-        return Response(
-            {
-                "message": f"Reminders sent for {count} appointment(s).",
-                "count": count
-            },
-            status=status.HTTP_200_OK
-        )
+        if getattr(settings, 'CELERY_TASK_ALWAYS_EAGER', False):
+            count = send_appointment_reminders()
+            return Response(
+                {
+                    "message": f"Reminders sent for {count} appointment(s).",
+                    "count": count
+                },
+                status=status.HTTP_200_OK
+            )
+        else:
+            task_res = send_appointment_reminders.delay()
+            return Response(
+                {
+                    "message": "Appointment reminders background task triggered successfully.",
+                    "task_id": str(task_res.id)
+                },
+                status=status.HTTP_202_ACCEPTED
+            )

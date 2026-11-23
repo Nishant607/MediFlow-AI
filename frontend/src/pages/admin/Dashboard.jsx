@@ -28,6 +28,7 @@ import { getAllInvoices } from '../../api/billingApi';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdminComingSoon from '../../components/admin/AdminComingSoon';
 import AnimatedNumber from '../../components/common/AnimatedNumber';
+import { formatDoctorName } from '../../utils/nameHelper';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import Badge from '../../components/common/Badge';
@@ -82,7 +83,7 @@ const PendingRow = ({ doctor, onApprove, isApproving }) => {
         <Stethoscope className="w-4 h-4" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-slate-800 truncate">Dr. {user.full_name || 'Doctor'}</p>
+        <p className="text-sm font-bold text-slate-800 truncate">{formatDoctorName(user.full_name)}</p>
         <p className="text-[11px] text-slate-400 truncate">{doctor.specialization} · {doctor.department_detail?.name || 'General'}</p>
       </div>
       <motion.button

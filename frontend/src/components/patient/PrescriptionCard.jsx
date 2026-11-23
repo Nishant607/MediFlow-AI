@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Stethoscope, Calendar, Clock, Pill, Activity, FileText } from 'lucide-react';
 import Badge from '../common/Badge';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 const PrescriptionCard = ({ prescription }) => {
   const doctorName = prescription.doctor_detail?.user_full_name || 'Doctor';
@@ -19,7 +20,7 @@ const PrescriptionCard = ({ prescription }) => {
             <Pill className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-base font-bold text-slate-900 font-display">Dr. {doctorName}</h4>
+            <h4 className="text-base font-bold text-slate-900 font-display">{formatDoctorName(doctorName)}</h4>
             <p className="text-xs text-[#005A9C] font-semibold mt-0.5">{spec}</p>
           </div>
         </div>

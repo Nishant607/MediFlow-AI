@@ -32,6 +32,7 @@ import AdminComingSoon from '../../components/admin/AdminComingSoon';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import Badge from '../../components/common/Badge';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 // Stat card with left accent border
 const StatCard = ({ label, value, icon: Icon, borderColor, iconBg, iconColor, subtext }) => (
@@ -169,7 +170,7 @@ const AdminStaffReportPage = () => {
       const perf = getDoctorPerformance(d);
       return [
         `DOC-${d.id}`,
-        `Dr. ${user.full_name || 'N/A'}`,
+        formatDoctorName(user.full_name, 'N/A'),
         d.department_detail?.name || d.department?.name || 'General',
         d.specialization || 'N/A',
         d.qualification || 'MBBS',
@@ -472,7 +473,7 @@ const AdminStaffReportPage = () => {
                             </div>
                             <div>
                               <p className="text-sm font-bold text-slate-900">
-                                Dr. {user.full_name || 'Doctor'}
+                                {formatDoctorName(user.full_name)}
                               </p>
                               <p className="text-[11px] text-slate-400 font-mono">
                                 {user.email || '—'}
@@ -561,7 +562,7 @@ const AdminStaffReportPage = () => {
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-slate-900">
-                        Dr. {selectedDoctor.user_detail?.full_name || 'Doctor'}
+                        {formatDoctorName(selectedDoctor.user_detail?.full_name)}
                       </h3>
                       <p className="text-[11px] text-slate-400">
                         {selectedDoctor.specialization} &bull;{' '}

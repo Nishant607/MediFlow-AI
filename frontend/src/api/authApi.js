@@ -25,6 +25,11 @@ export const getCurrentUser = async () => {
   return response.data;
 };
 
+export const updateCurrentUser = async (userData) => {
+  const response = await axiosClient.patch('/auth/me/', userData);
+  return response.data;
+};
+
 export const getDepartments = async () => {
   const response = await axiosClient.get('/departments/');
   return response.data;

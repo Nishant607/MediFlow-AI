@@ -33,6 +33,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import { printMedicalReport } from '../../utils/reportGenerator';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 /* ─── Currency Helpers ─── */
 const formatINR = (val) => {
@@ -315,7 +316,7 @@ const AdminBilling = () => {
     const rows = filteredInvoices.map((inv) => [
       inv.id,
       `"${inv.patient_detail?.user_full_name || 'N/A'}"`,
-      `"Dr. ${inv.doctor_detail?.user_full_name || 'N/A'}"`,
+      `"${formatDoctorName(inv.doctor_detail?.user_full_name, 'N/A')}"`,
       `"${inv.doctor_detail?.specialization || 'N/A'}"`,
       inv.appointment_date || 'N/A',
       inv.appointment_time || 'N/A',
@@ -356,7 +357,7 @@ const AdminBilling = () => {
       data: filteredInvoices.map((inv) => [
         `#${inv.id}`,
         inv.patient_detail?.user_full_name || 'N/A',
-        `Dr. ${inv.doctor_detail?.user_full_name || 'N/A'}`,
+        formatDoctorName(inv.doctor_detail?.user_full_name, 'N/A'),
         inv.doctor_detail?.specialization || 'N/A',
         inv.appointment_date || (inv.created_at ? new Date(inv.created_at).toISOString().slice(0, 10) : 'N/A'),
         `₹${parseFloat(inv.total_amount || 0).toLocaleString('en-IN')}`,
@@ -1077,7 +1078,7 @@ const AdminBilling = () => {
                         {inv.patient_detail?.user_full_name || 'N/A'}
                       </td>
                       <td className="px-6 py-4 text-slate-700">
-                        <span className="font-semibold">Dr. {inv.doctor_detail?.user_full_name || 'N/A'}</span>
+                        <span className="font-semibold">{formatDoctorName(inv.doctor_detail?.user_full_name, 'N/A')}</span>
                         {inv.doctor_detail?.specialization && (
                           <span className="block text-[11px] text-slate-400">
                             {inv.doctor_detail.specialization}

@@ -1,0 +1,40 @@
+---
+# ===================================================================
+# Playbook 3: Automated MediFlow-AI Application Deployment
+# ===================================================================
+- name: Deploy MediFlow-AI Stack to Target Node
+  hosts: mediflow_servers
+  become: true
+  tasks:
+    - name: Ensure MediFlow application directory exists
+      file:
+        path: "{{ mediflow_app_dir }}"
+        state: directory
+        owner: "{{ ansible_user | default('ubuntu') }}"
+        group: "{{ ansible_user | default('ubuntu') }}"
+        mode: '0755'
+
+    - name: Clone or pull latest MediFlow repository
+      git:
+        repo: "{{ mediflow_git_repo }}"
+        dest: "{{ mediflow_app_dir }}"
+        version: main
+        force: false
+      ignore_errors: true
+
+    - name: Apply Kubernetes manifests namespace
+      command: kubectl apply -f {{ mediflow_app_dir }}/k8s/namespace.yaml
+      ignore_errors: true
+
+    - name: Deploy full MediFlow-AI manifests stack
+      command: kubectl apply -f {{ mediflow_app_dir }}/k8s/
+      ignore_errors: true
+
+    - name: Verify MediFlow Pods status in mediflow namespace
+      command: kubectl get pods -n mediflow
+      register: mediflow_pods
+      changed_when: false
+
+    - name: Output deployment status
+      debug:
+        msg: "{{ mediflow_pods.stdout_lines }}"

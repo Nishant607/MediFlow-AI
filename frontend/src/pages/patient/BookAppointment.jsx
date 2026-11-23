@@ -20,6 +20,7 @@ import { bookAppointment } from '../../api/appointmentsApi';
 import DoctorCard from '../../components/patient/DoctorCard';
 import SlotPicker from '../../components/patient/SlotPicker';
 import PageWrapper from '../../components/common/PageWrapper';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 const BookAppointment = () => {
   const { currentUser, logout } = useAuth();
@@ -310,7 +311,7 @@ const BookAppointment = () => {
                   <div className="text-xs text-slate-600 space-y-1.5">
                     <p className="flex items-center gap-2">
                       <strong className="text-slate-500 font-medium">Doctor:</strong>{' '}
-                      <span className="text-slate-800 font-semibold">Dr. {selectedDoctor.user_detail?.full_name}</span>
+                      <span className="text-slate-800 font-semibold">{formatDoctorName(selectedDoctor.user_detail?.full_name)}</span>
                     </p>
                     <p className="flex items-center gap-2 font-mono">
                       <strong className="text-slate-500 font-normal">Date & Time:</strong>{' '}

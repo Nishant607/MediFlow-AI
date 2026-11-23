@@ -13,6 +13,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { getEmergencyContacts } from '../../api/departmentsApi';
+import { useAuth } from '../../context/AuthContext';
 import PageWrapper from '../../components/common/PageWrapper';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
@@ -25,9 +26,18 @@ const CONTACT_TYPE_LABELS = {
 };
 
 const EmergencyPage = () => {
+  const { currentUser } = useAuth();
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const backPath = currentUser
+    ? currentUser.role === 'doctor'
+      ? '/doctor/dashboard'
+      : currentUser.role === 'admin'
+      ? '/admin/dashboard'
+      : '/patient/dashboard'
+    : '/login';
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -64,11 +74,11 @@ const EmergencyPage = () => {
         {/* Navigation Breadcrumb */}
         <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
           <Link
-            to="/patient/dashboard"
+            to={backPath}
             className="inline-flex items-center gap-2 text-slate-500 hover:text-[#007ABF] text-sm font-semibold transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            {currentUser ? 'Back to Dashboard' : 'Back to Login'}
           </Link>
         </motion.div>
 

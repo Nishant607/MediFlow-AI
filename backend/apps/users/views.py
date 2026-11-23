@@ -87,12 +87,47 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
-class UserMeView(generics.RetrieveAPIView):
+class UserMeView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserMeSerializer
 
     def get_object(self):
         return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        full_name = request.data.get('full_name')
+        if full_name:
+            user.full_name = full_name
+            user.save()
+
+        # Update patient profile if provided
+        if user.role == 'patient' and hasattr(user, 'patient_profile'):
+            profile = user.patient_profile
+            phone = request.data.get('phone')
+            dob = request.data.get('date_of_birth') or request.data.get('dob')
+            gender = request.data.get('gender')
+            if phone is not None:
+                profile.phone = phone
+            if dob:
+                profile.date_of_birth = dob
+            if gender is not None:
+                profile.gender = gender
+            profile.save()
+
+        # Update doctor profile if provided
+        elif user.role == 'doctor' and hasattr(user, 'doctor_profile'):
+            profile = user.doctor_profile
+            specialization = request.data.get('specialization')
+            available_time = request.data.get('available_time')
+            if specialization:
+                profile.specialization = specialization
+            if available_time:
+                profile.available_time = available_time
+            profile.save()
+
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AdminStatsView(views.APIView):

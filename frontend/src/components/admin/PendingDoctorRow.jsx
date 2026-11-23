@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Stethoscope, GraduationCap, Building, Briefcase, CheckCircle2 } from 'lucide-react';
 import Badge from '../common/Badge';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 const PendingDoctorRow = ({ doctor, onApprove, isApproving }) => {
   const user = doctor.user_detail || doctor.user || {};
@@ -21,7 +22,7 @@ const PendingDoctorRow = ({ doctor, onApprove, isApproving }) => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="text-base font-bold text-slate-900 font-display">Dr. {user.full_name || 'Doctor'}</h4>
+              <h4 className="text-base font-bold text-slate-900 font-display">{formatDoctorName(user.full_name)}</h4>
               <Badge variant="warning" dot>Pending</Badge>
             </div>
             <p className="text-xs text-slate-500 font-mono">{user.email}</p>

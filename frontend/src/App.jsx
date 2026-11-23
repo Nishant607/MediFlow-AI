@@ -43,6 +43,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register/patient" element={<RegisterPatient />} />
           <Route path="/register/doctor" element={<RegisterDoctor />} />
+          <Route path="/emergency" element={<EmergencyPage />} />
 
           {/* Protected Patient Routes */}
           <Route

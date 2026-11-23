@@ -1,0 +1,41 @@
+---
+# ===================================================================
+# Playbook 2: Automated Kubernetes & CLI Tools Installation
+# ===================================================================
+- name: Setup Kubernetes Environment and Orchestration Tools
+  hosts: mediflow_servers
+  become: true
+  tasks:
+    - name: Disable swap memory (Kubernetes requirement)
+      command: swapoff -a
+      changed_when: false
+
+    - name: Remove swap entry from /etc/fstab
+      replace:
+        path: /etc/fstab
+        regexp: '^(\s*[^#\s]+\s+[^#\s]+\s+swap\s+.*)$'
+        replace: '# \1'
+
+    - name: Download and install lightweight K8s runtime (k3s / minikube)
+      shell: |
+        if ! command -v k3s &> /dev/null; then
+          curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+        fi
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Ensure kubectl alias is configured
+      file:
+        src: /usr/local/bin/k3s
+        dest: /usr/local/bin/kubectl
+        state: link
+        force: true
+
+    - name: Verify Kubernetes cluster node status
+      command: kubectl get nodes
+      register: k8s_nodes
+      changed_when: false
+
+    - name: Display cluster node summary
+      debug:
+        msg: "{{ k8s_nodes.stdout_lines }}"

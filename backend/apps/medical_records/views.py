@@ -71,6 +71,12 @@ class ReportDownloadView(views.APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
 
+        if not report.file or not os.path.exists(report.file.path):
+            return Response(
+                {"detail": "Report file not found on server."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
         file_handle = open(report.file.path, 'rb')
         filename = os.path.basename(report.file.name)
         return FileResponse(file_handle, as_attachment=True, filename=filename)

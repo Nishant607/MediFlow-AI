@@ -31,7 +31,13 @@ class Appointment(models.Model):
 
     class Meta:
         ordering = ['appointment_date', 'appointment_time']
-        unique_together = ('doctor', 'appointment_date', 'appointment_time')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['doctor', 'appointment_date', 'appointment_time'],
+                condition=models.Q(status='SCHEDULED'),
+                name='unique_scheduled_doctor_slot'
+            )
+        ]
 
     def __str__(self):
         p_name = self.patient.user.full_name

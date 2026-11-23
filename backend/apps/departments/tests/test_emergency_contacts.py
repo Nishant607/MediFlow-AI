@@ -66,7 +66,9 @@ def test_emergency_contacts_list_returns_only_active_ones(auth_client, emergency
 
 
 @pytest.mark.django_db
-def test_emergency_contacts_requires_authentication(api_client, emergency_contacts):
+def test_emergency_contacts_accessible_publicly(api_client, emergency_contacts):
     url = reverse('emergency-contact-list')
     response = api_client.get(url)
-    assert response.status_code == 401
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 2

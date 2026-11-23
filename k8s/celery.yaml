@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker-deployment
+  namespace: mediflow
+  labels:
+    app: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+        - name: celery-worker
+          image: hospital_ai_backend:latest
+          imagePullPolicy: IfNotPresent
+          command: ["celery", "-A", "config", "worker", "-l", "info"]
+          env:
+            - name: DATABASE_URL
+              value: "postgres://hospital_user:hospital_production_secure_pass_2026@postgres-service:5432/hospital_db"
+            - name: REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mediflow-config
+                  key: REDIS_URL
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mediflow-secrets
+                  key: DJANGO_SECRET_KEY
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi

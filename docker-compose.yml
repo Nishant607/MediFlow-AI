@@ -27,6 +27,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: hospital_ai_backend:latest
     container_name: hospital_ai_backend
     restart: always
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
@@ -49,6 +50,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: hospital_ai_backend:latest
     container_name: hospital_ai_celery
     restart: always
     command: celery -A config worker -l info
@@ -69,6 +71,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: hospital_ai_backend:latest
     container_name: hospital_ai_celery_beat
     restart: always
     command: celery -A config beat -l info
@@ -89,6 +92,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: hospital_ai_frontend:latest
     container_name: hospital_ai_frontend
     restart: always
     ports:

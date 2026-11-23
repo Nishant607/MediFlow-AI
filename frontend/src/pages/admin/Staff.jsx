@@ -14,11 +14,12 @@ import {
   Award,
   Filter,
 } from 'lucide-react';
-import { listDoctors, listPendingDoctors, approveDoctor } from '../../api/doctorsApi';
+import { listDoctors, listPendingDoctors, approveDoctor, rejectDoctor } from '../../api/doctorsApi';
 import AdminLayout from '../../components/admin/AdminLayout';
 import Skeleton from '../../components/common/Skeleton';
 import EmptyState from '../../components/common/EmptyState';
 import Badge from '../../components/common/Badge';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 /* ── Deterministic Avatar Color Palette ──────────────────── */
 const AVATAR_PALETTES = [
@@ -109,7 +110,7 @@ const AdminStaffPage = () => {
 
       const doctorName =
         doctor.user_detail?.full_name || doctor.full_name || 'Doctor';
-      setActionSuccessMessage(`Dr. ${doctorName} has been verified and approved.`);
+      setActionSuccessMessage(`${formatDoctorName(doctorName)} has been verified and approved.`);
       setTimeout(() => setActionSuccessMessage(''), 4000);
     } catch (err) {
       console.error('Approve doctor failed', err);
@@ -117,6 +118,33 @@ const AdminStaffPage = () => {
         err.response?.data?.detail ||
         err.response?.data?.error ||
         'Failed to approve doctor. Please try again.';
+      setCardErrors((prev) => ({ ...prev, [doctorId]: errMsg }));
+    } finally {
+      setApprovingIds((prev) => prev.filter((id) => id !== doctorId));
+    }
+  };
+
+  /* ── Reject Doctor Action ───────────────────────────────── */
+  const handleReject = async (doctor) => {
+    const doctorId = doctor.id;
+    const doctorName = doctor.user_detail?.full_name || doctor.full_name || 'Doctor';
+    if (!window.confirm(`Are you sure you want to reject Dr. ${doctorName}'s registration?`)) {
+      return;
+    }
+    setApprovingIds((prev) => [...prev, doctorId]);
+    setCardErrors((prev) => ({ ...prev, [doctorId]: '' }));
+
+    try {
+      await rejectDoctor(doctorId);
+      setPendingDoctors((prev) => prev.filter((d) => d.id !== doctorId));
+      setActionSuccessMessage(`Dr. ${doctorName}'s registration was rejected.`);
+      setTimeout(() => setActionSuccessMessage(''), 4000);
+    } catch (err) {
+      console.error('Reject doctor failed', err);
+      const errMsg =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        'Failed to reject doctor. Please try again.';
       setCardErrors((prev) => ({ ...prev, [doctorId]: errMsg }));
     } finally {
       setApprovingIds((prev) => prev.filter((id) => id !== doctorId));
@@ -408,7 +436,7 @@ const AdminStaffPage = () => {
                         </div>
                         <div className="min-w-0">
                           <h3 className="text-sm font-bold text-slate-900 truncate">
-                            Dr. {fullName}
+                            {formatDoctorName(fullName)}
                           </h3>
                           <p className="text-xs text-slate-400 truncate">
                             {user.email || '—'}
@@ -484,22 +512,30 @@ const AdminStaffPage = () => {
 
                   {/* Card Footer: Action Area for Pending Doctors */}
                   {isPending && (
-                    <div className="pt-4 mt-2 border-t border-slate-100 flex items-center justify-end">
+                    <div className="pt-4 mt-2 border-t border-slate-100 flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={isApproving}
+                        onClick={() => handleReject(doctor)}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 border border-rose-300 text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
+                      >
+                        Reject
+                      </button>
                       <button
                         type="button"
                         disabled={isApproving}
                         onClick={() => handleApprove(doctor)}
-                        className="w-full inline-flex items-center justify-center gap-2 bg-[#0EA5C9] hover:bg-[#0B7EA0] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-sm disabled:opacity-50"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[#0EA5C9] hover:bg-[#0B7EA0] text-white px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-sm disabled:opacity-50"
                       >
                         {isApproving ? (
                           <>
                             <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            Approving...
+                            Processing...
                           </>
                         ) : (
                           <>
                             <CheckCircle2 className="w-4 h-4" />
-                            Approve Doctor
+                            Approve
                           </>
                         )}
                       </button>

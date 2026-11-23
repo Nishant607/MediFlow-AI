@@ -19,7 +19,7 @@ Both support Docker-based deployments. Use the provided `Dockerfile` in `backend
 
 | Service | Notes |
 |---|---|
-| **[Vercel](https://vercel.com)** | Best-in-class for Vite/React. Free tier. Auto-deploy from GitHub. Set `VITE_API_URL` env var. |
+| **[Vercel](https://vercel.com)** | Best-in-class for Vite/React. Free tier. Auto-deploy from GitHub. Set `VITE_API_BASE_URL` (or `VITE_API_URL`) env var. |
 | **[Netlify](https://netlify.com)** | Also excellent for React SPAs. Free tier. Similar setup to Vercel. |
 
 ---

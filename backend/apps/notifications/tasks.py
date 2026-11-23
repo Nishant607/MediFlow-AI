@@ -37,6 +37,23 @@ def send_appointment_booked_notification(appointment_id):
         fail_silently=True
     )
 
+    # Notify doctor
+    doctor_user = getattr(appointment.doctor, 'user', None)
+    if doctor_user:
+        doc_message = f"New appointment booked: Patient {patient_user.full_name} on {date_str} at {time_str}."
+        Notification.objects.create(
+            user=doctor_user,
+            notification_type='APPOINTMENT_BOOKED',
+            message=doc_message
+        )
+        send_mail(
+            subject="New Appointment Booked",
+            message=doc_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[doctor_user.email],
+            fail_silently=True
+        )
+
 
 @shared_task
 def send_appointment_cancelled_notification(appointment_id):
@@ -65,6 +82,23 @@ def send_appointment_cancelled_notification(appointment_id):
         recipient_list=[patient_user.email],
         fail_silently=True
     )
+
+    # Notify doctor
+    doctor_user = getattr(appointment.doctor, 'user', None)
+    if doctor_user:
+        doc_message = f"Appointment cancelled: Patient {patient_user.full_name} for {date_str} at {time_str}."
+        Notification.objects.create(
+            user=doctor_user,
+            notification_type='APPOINTMENT_CANCELLED',
+            message=doc_message
+        )
+        send_mail(
+            subject="Appointment Cancellation",
+            message=doc_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[doctor_user.email],
+            fail_silently=True
+        )
 
 
 @shared_task

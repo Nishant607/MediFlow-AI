@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Stethoscope, User, Play, XCircle, FileText } from 'lucide-react';
 import Badge from '../common/Badge';
+import { formatDoctorName } from '../../utils/nameHelper';
 
 const AppointmentCard = ({ appointment, onCancel, isDoctorView = false, onStartConsultation }) => {
   const doctorName = appointment.doctor_detail?.user_full_name || appointment.doctor_name || 'Doctor';
@@ -40,7 +41,7 @@ const AppointmentCard = ({ appointment, onCancel, isDoctorView = false, onStartC
             {isDoctorView ? (
               <h4 className="text-base font-bold text-slate-900 font-display">Patient: {patientName}</h4>
             ) : (
-              <h4 className="text-base font-bold text-slate-900 font-display">Dr. {doctorName}</h4>
+              <h4 className="text-base font-bold text-slate-900 font-display">{formatDoctorName(doctorName)}</h4>
             )}
             <p className="text-xs text-[#005A9C] font-semibold mt-0.5">{departmentName}</p>
           </div>

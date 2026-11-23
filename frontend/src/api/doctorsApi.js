@@ -25,3 +25,8 @@ export const approveDoctor = async (doctorId) => {
   const response = await axiosClient.patch(`/doctors/${doctorId}/approve/`);
   return response.data;
 };
+
+export const rejectDoctor = async (doctorId) => {
+  const response = await axiosClient.delete(`/doctors/${doctorId}/reject/`);
+  return response.data;
+};
