@@ -16,3 +16,5 @@ groq
 scikit-learn
 pypdf
 drf-spectacular
+gunicorn
+whitenoise
