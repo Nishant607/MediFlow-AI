@@ -2,10 +2,23 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
 from apps.audit.views import HealthCheckView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+
+def root_welcome_view(request):
+    return JsonResponse({
+        "project": "MediFlow-AI Cloud-Native Hospital System API",
+        "status": "online",
+        "health_check": "/api/health/",
+        "interactive_documentation": "/api/docs/",
+        "schema": "/api/schema/",
+    })
+
+
 urlpatterns = [
+    path('', root_welcome_view, name='root-welcome'),
     path('admin/', admin.site.urls),
     path('api/health/', HealthCheckView.as_view(), name='health-check'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
