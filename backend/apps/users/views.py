@@ -71,6 +71,18 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     throttle_classes = [LoginThrottle]
 
     def post(self, request, *args, **kwargs):
+        # Auto-seed demo accounts on first login attempt if they do not exist yet
+        email = request.data.get('email', '').strip().lower()
+        if email and ('mediflow.ai' in email):
+            from apps.users.models import User
+            if not User.objects.filter(email='admin@mediflow.ai').exists():
+                try:
+                    from django.core.management import call_command
+                    call_command('seed_demo_data')
+                except Exception as seed_err:
+                    import logging
+                    logging.getLogger(__name__).warning("Auto-seed error: %s", seed_err)
+
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
