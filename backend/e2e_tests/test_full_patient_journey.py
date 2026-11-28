@@ -114,6 +114,8 @@ def test_full_patient_journey(client, department, admin_user):
     client.force_authenticate(user=patient_user)
     from datetime import timedelta
     tomorrow = date.today() + timedelta(days=1)
+    if tomorrow.weekday() == 6:  # If tomorrow is Sunday, clinic is closed, book Monday instead
+        tomorrow += timedelta(days=1)
     appt_payload = {
         'doctor_id': doctor_profile.id,
         'appointment_date': str(tomorrow),

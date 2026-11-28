@@ -256,3 +256,78 @@ class NotificationsTests(TestCase):
     def test_non_admin_cannot_trigger_reminders(self):
         res = self.client_patient1.post('/api/notifications/trigger-reminders/')
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_appointment_booked_sends_detailed_email_to_patient_and_doctor(self):
+        from django.core import mail
+        mail.outbox = []
+
+        appt = Appointment.objects.create(
+            patient=self.patient_profile1,
+            doctor=self.doctor_profile,
+            appointment_date='2026-10-15',
+            appointment_time='11:30',
+            reason='Persistent cough and mild chest congestion',
+            status='SCHEDULED'
+        )
+
+        # 2 emails should have been sent (1 to patient, 1 to doctor)
+        self.assertEqual(len(mail.outbox), 2)
+
+        # Patient email check
+        patient_mail = next(m for m in mail.outbox if self.patient_user1.email in m.to)
+        self.assertIn("Appointment Confirmed", patient_mail.subject)
+        self.assertIn("Dr. Adams", patient_mail.body)
+        self.assertIn("2026-10-15", patient_mail.body)
+        self.assertIn("11:30", patient_mail.body)
+        self.assertIn("Persistent cough", patient_mail.body)
+        self.assertIn("Pediatrics", patient_mail.body)
+        self.assertTrue(len(patient_mail.alternatives) > 0)
+        self.assertEqual(patient_mail.alternatives[0][1], 'text/html')
+        self.assertIn("MEDIFLOW AI", patient_mail.alternatives[0][0])
+
+        # Doctor email check
+        doc_mail = next(m for m in mail.outbox if self.doctor_user.email in m.to)
+        self.assertIn("New Appointment Booked", doc_mail.subject)
+        self.assertIn("Patient Alpha", doc_mail.body)
+        self.assertIn("2026-10-15", doc_mail.body)
+        self.assertIn("11:30", doc_mail.body)
+        self.assertIn("1112223333", doc_mail.body)
+        self.assertIn("Persistent cough", doc_mail.body)
+        self.assertTrue(len(doc_mail.alternatives) > 0)
+        self.assertEqual(doc_mail.alternatives[0][1], 'text/html')
+        self.assertIn("MEDIFLOW AI", doc_mail.alternatives[0][0])
+
+    def test_appointment_reminder_sends_email_to_both_patient_and_doctor(self):
+        from django.core import mail
+        mail.outbox = []
+
+        tomorrow = timezone.localtime().date() + timedelta(days=1)
+        appt = Appointment.objects.create(
+            patient=self.patient_profile1,
+            doctor=self.doctor_profile,
+            appointment_date=tomorrow,
+            appointment_time='14:00',
+            reason='Routine follow-up',
+            status='SCHEDULED'
+        )
+
+        mail.outbox = []  # Clear booking emails to test reminders specifically
+        send_appointment_reminders()
+
+        # Both patient and doctor should receive reminder emails
+        self.assertEqual(len(mail.outbox), 2)
+
+        patient_mail = next(m for m in mail.outbox if self.patient_user1.email in m.to)
+        self.assertIn("Appointment Reminder", patient_mail.subject)
+        self.assertIn("Dr. Adams", patient_mail.body)
+        self.assertIn(str(tomorrow), patient_mail.body)
+        self.assertIn("14:00", patient_mail.body)
+        self.assertTrue(len(patient_mail.alternatives) > 0)
+
+        doc_mail = next(m for m in mail.outbox if self.doctor_user.email in m.to)
+        self.assertIn("Daily Schedule Reminder", doc_mail.subject)
+        self.assertIn("Patient Alpha", doc_mail.body)
+        self.assertIn(str(tomorrow), doc_mail.body)
+        self.assertIn("14:00", doc_mail.body)
+        self.assertTrue(len(doc_mail.alternatives) > 0)
+
