@@ -4,7 +4,8 @@ from apps.appointments.constants import (
     CLINIC_START_TIME,
     CLINIC_END_TIME,
     SLOT_DURATION_MINUTES,
-    CLINIC_CLOSED_WEEKDAY
+    CLINIC_CLOSED_WEEKDAY,
+    ALLOW_ALL_DAYS
 )
 from apps.appointments.models import Appointment
 
@@ -40,7 +41,7 @@ def get_available_slots(doctor, target_date):
     today = timezone.localtime().date()
     now_time = timezone.localtime().time()
 
-    if target_date.weekday() == CLINIC_CLOSED_WEEKDAY:
+    if CLINIC_CLOSED_WEEKDAY >= 0 and target_date.weekday() == CLINIC_CLOSED_WEEKDAY:
         return {"is_closed": True, "message": "Clinic is closed on Sundays.", "available_slots": []}
 
     if not doctor.is_approved:
@@ -60,7 +61,7 @@ def get_available_slots(doctor, target_date):
     available_slots = []
     for slot_time in all_slots:
         is_booked = slot_time in booked_times
-        is_past = (target_date < today) or (target_date == today and slot_time <= now_time)
+        is_past = (target_date < today) or (not ALLOW_ALL_DAYS and target_date == today and slot_time <= now_time)
         available = not (is_booked or is_past)
         available_slots.append({
             "time": slot_time.strftime('%H:%M'),
@@ -99,7 +100,7 @@ def is_slot_bookable(doctor, target_date, target_time):
     if target_date < today:
         return False, 'Cannot book appointments for past dates.'
 
-    if target_date.weekday() == CLINIC_CLOSED_WEEKDAY:
+    if CLINIC_CLOSED_WEEKDAY >= 0 and target_date.weekday() == CLINIC_CLOSED_WEEKDAY:
         return False, 'Clinic is closed on Sundays.'
 
     if not doctor.is_approved:
@@ -109,7 +110,7 @@ def is_slot_bookable(doctor, target_date, target_time):
     if target_time not in all_slots:
         return False, 'Selected time is outside operating clinic hours (09:00 AM - 05:00 PM).'
 
-    if target_date == today and target_time <= now_time:
+    if not ALLOW_ALL_DAYS and target_date == today and target_time <= now_time:
         return False, 'Cannot book a time slot in the past.'
 
     is_already_booked = Appointment.objects.filter(
