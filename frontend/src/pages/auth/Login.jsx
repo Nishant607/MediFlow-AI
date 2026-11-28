@@ -43,7 +43,9 @@ const Login = () => {
       else navigate('/');
     } catch (err) {
       console.error('Login error:', err);
-      if (err.response && err.response.data && err.response.data.detail) {
+      if (!err.response) {
+        setError('Network error: Unable to reach server. Please ensure backend is running.');
+      } else if (err.response.data && err.response.data.detail) {
         setError(err.response.data.detail);
       } else {
         setError('Login failed. Please check your credentials.');
