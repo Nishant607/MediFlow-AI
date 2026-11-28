@@ -1,0 +1,172 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 5313 >>
+stream
+0.05 0.35 0.55 rg
+40 760 515 45 re f
+1 1 1 rg
+BT /F2 16 Tf 55 785 Td (MEDIFLOW HEALTHCARE SYSTEM) Tj ET
+BT /F1 9 Tf 55 770 Td (24/7 Clinical Excellence & Diagnostic Pathology Laboratories | NABH Accredited) Tj ET
+0.1 0.15 0.2 rg
+BT /F2 13 Tf 40 735 Td (NON-INVASIVE CARDIOLOGY INVESTIGATION REPORT) Tj ET
+0.8 0.85 0.9 RG 1 w
+40 725 m 555 725 l S
+0.96 0.97 0.99 rg 40 660 515 58 re f
+0.85 0.88 0.92 RG 1 w 40 660 515 58 re S
+0.1 0.15 0.2 rg
+BT /F2 8 Tf 50 702 Td (Patient Name:) Tj /F1 8 Tf 100 702 Td (Rahul Verma) Tj ET
+BT /F2 8 Tf 50 689 Td (Patient ID:) Tj /F1 8 Tf 100 689 Td (MF-PAT-1082) Tj ET
+BT /F2 8 Tf 50 676 Td (Age / Gender:) Tj /F1 8 Tf 100 676 Td (29 Yrs / Male) Tj ET
+BT /F2 8 Tf 50 663 Td (Study:) Tj /F1 8 Tf 100 663 Td (Resting 12-Lead ECG & Echo) Tj ET
+BT /F2 8 Tf 310 702 Td (Consultant:) Tj /F1 8 Tf 380 702 Td (Dr. Rajesh Sharma) Tj ET
+BT /F2 8 Tf 310 689 Td (Department:) Tj /F1 8 Tf 380 689 Td (Cardiology & Heart Care) Tj ET
+BT /F2 8 Tf 310 676 Td (Date of Exam:) Tj /F1 8 Tf 380 676 Td (26-Nov-2026) Tj ET
+BT /F2 8 Tf 310 663 Td (Device:) Tj /F1 8 Tf 380 663 Td (Philips Pagewriter TC70) Tj ET
+0.05 0.35 0.55 rg
+BT /F2 10 Tf 40 640 Td (1. 12-LEAD RESTING ELECTROCARDIOGRAM (ECG)) Tj ET
+0.05 0.35 0.55 RG 1.5 w
+40 632 m 555 632 l S
+0.92 0.94 0.97 rg 40 615 515 16 re f
+0.2 0.25 0.3 rg
+BT /F2 8 Tf 45 618 Td (TEST PARAMETER) Tj 240 618 Td (OBSERVED VALUE) Tj 350 618 Td (REFERENCE RANGE) Tj 470 618 Td (STATUS) Tj ET
+0.93 0.94 0.96 RG 0.5 w
+40 600 m 555 600 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 602 Td (Heart Rate (Resting)) Tj ET
+BT /F2 8 Tf 240 602 Td (72 bpm) Tj ET
+BT /F1 8 Tf 350 602 Td (60 - 100 bpm) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 602 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 585 m 555 585 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 587 Td (Cardiac Rhythm) Tj ET
+BT /F2 8 Tf 240 587 Td (Sinus Rhythm) Tj ET
+BT /F1 8 Tf 350 587 Td (Regular Sinus) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 587 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 570 m 555 570 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 572 Td (PR Interval) Tj ET
+BT /F2 8 Tf 240 572 Td (148 ms) Tj ET
+BT /F1 8 Tf 350 572 Td (120 - 200 ms) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 572 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 555 m 555 555 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 557 Td (QRS Duration) Tj ET
+BT /F2 8 Tf 240 557 Td (88 ms) Tj ET
+BT /F1 8 Tf 350 557 Td (< 100 ms) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 557 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 540 m 555 540 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 542 Td (QTc Interval (Bazett)) Tj ET
+BT /F2 8 Tf 240 542 Td (412 ms) Tj ET
+BT /F1 8 Tf 350 542 Td (< 440 ms (Male)) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 542 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.05 0.35 0.55 rg
+BT /F2 10 Tf 40 517 Td (2. 2D TRANSTHORACIC ECHOCARDIOGRAM (2D ECHO)) Tj ET
+0.05 0.35 0.55 RG 1.5 w
+40 509 m 555 509 l S
+0.92 0.94 0.97 rg 40 492 515 16 re f
+0.2 0.25 0.3 rg
+BT /F2 8 Tf 45 495 Td (TEST PARAMETER) Tj 240 495 Td (OBSERVED VALUE) Tj 350 495 Td (REFERENCE RANGE) Tj 470 495 Td (STATUS) Tj ET
+0.93 0.94 0.96 RG 0.5 w
+40 477 m 555 477 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 479 Td (Left Ventricular Ejection Fraction (LVEF)) Tj ET
+BT /F2 8 Tf 240 479 Td (62 %) Tj ET
+BT /F1 8 Tf 350 479 Td (55 - 70 %) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 479 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 462 m 555 462 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 464 Td (Left Ventricular Internal Dimension (LVIDd)) Tj ET
+BT /F2 8 Tf 240 464 Td (46 mm) Tj ET
+BT /F1 8 Tf 350 464 Td (35 - 56 mm) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 464 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 447 m 555 447 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 449 Td (Interventricular Septum (IVSd)) Tj ET
+BT /F2 8 Tf 240 449 Td (9.5 mm) Tj ET
+BT /F1 8 Tf 350 449 Td (6.0 - 11.0 mm) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 449 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 432 m 555 432 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 434 Td (Regional Wall Motion) Tj ET
+BT /F2 8 Tf 240 434 Td (No Abnormality) Tj ET
+BT /F1 8 Tf 350 434 Td (Concentric Normal) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 434 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 417 m 555 417 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 419 Td (Valvular Assessment) Tj ET
+BT /F2 8 Tf 240 419 Td (Mild Trivial MR) Tj ET
+BT /F1 8 Tf 350 419 Td (No Significant Stenosis) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 419 Td (STABLE) Tj ET
+0.1 0.15 0.2 rg
+0.97 0.98 0.99 rg 40 354 515 45 re f
+0.8 0.85 0.9 RG 1 w 40 354 515 45 re S
+0.05 0.35 0.55 rg
+BT /F2 9 Tf 50 388 Td (CLINICAL INTERPRETATION & ADVISORY:) Tj ET
+0.25 0.3 0.35 rg
+BT /F1 8 Tf 50 374 Td (1. Normal sinus rhythm with normal axis and healthy intraventricular conduction.) Tj ET
+BT /F1 8 Tf 50 363 Td (2. Preserved global left ventricular systolic pump performance with LVEF of 62%.) Tj ET
+BT /F1 8 Tf 50 352 Td (3. No baseline ischemic changes. Correlate clinically with cardiovascular risk profile.) Tj ET
+0.85 0.88 0.92 RG 1 w 40 60 m 555 60 l S
+0.3 0.35 0.4 rg
+BT /F2 8 Tf 40 48 Td (Authorized Signatory: Dr. Rajesh Sharma (MD, Cardiologist)) Tj ET
+BT /F1 7.5 Tf 40 38 Td (MediFlow Pathology Center, 100 Clinical Way, New Delhi. Ph: +1-123-556-5523) Tj ET
+BT /F2 7.5 Tf 440 38 Td (Electronic Verified Report) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000005616 00000 n 
+0000005686 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+5761
+%%EOF

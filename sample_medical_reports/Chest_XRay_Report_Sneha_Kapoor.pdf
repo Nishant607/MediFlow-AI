@@ -1,0 +1,129 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 3990 >>
+stream
+0.05 0.35 0.55 rg
+40 760 515 45 re f
+1 1 1 rg
+BT /F2 16 Tf 55 785 Td (MEDIFLOW HEALTHCARE SYSTEM) Tj ET
+BT /F1 9 Tf 55 770 Td (24/7 Clinical Excellence & Diagnostic Pathology Laboratories | NABH Accredited) Tj ET
+0.1 0.15 0.2 rg
+BT /F2 13 Tf 40 735 Td (DEPARTMENT OF RADIOLOGY & DIGITAL IMAGING) Tj ET
+0.8 0.85 0.9 RG 1 w
+40 725 m 555 725 l S
+0.96 0.97 0.99 rg 40 660 515 58 re f
+0.85 0.88 0.92 RG 1 w 40 660 515 58 re S
+0.1 0.15 0.2 rg
+BT /F2 8 Tf 50 702 Td (Patient Name:) Tj /F1 8 Tf 100 702 Td (Sneha Kapoor) Tj ET
+BT /F2 8 Tf 50 689 Td (Patient ID:) Tj /F1 8 Tf 100 689 Td (MF-PAT-2094) Tj ET
+BT /F2 8 Tf 50 676 Td (Age / Gender:) Tj /F1 8 Tf 100 676 Td (27 Yrs / Female) Tj ET
+BT /F2 8 Tf 50 663 Td (Exam Type:) Tj /F1 8 Tf 100 663 Td (Chest X-Ray PA View) Tj ET
+BT /F2 8 Tf 310 702 Td (Referring Doctor:) Tj /F1 8 Tf 380 702 Td (Dr. Priya Patel) Tj ET
+BT /F2 8 Tf 310 689 Td (Department:) Tj /F1 8 Tf 380 689 Td (General Medicine & Pulmonology) Tj ET
+BT /F2 8 Tf 310 676 Td (Date of Exam:) Tj /F1 8 Tf 380 676 Td (27-Nov-2026) Tj ET
+BT /F2 8 Tf 310 663 Td (Modality:) Tj /F1 8 Tf 380 663 Td (Carestream DR Digital) Tj ET
+0.05 0.35 0.55 rg
+BT /F2 10 Tf 40 640 Td (DIGITAL RADIOGRAPHY (CHEST PA VIEW) EVALUATION) Tj ET
+0.05 0.35 0.55 RG 1.5 w
+40 632 m 555 632 l S
+0.92 0.94 0.97 rg 40 615 515 16 re f
+0.2 0.25 0.3 rg
+BT /F2 8 Tf 45 618 Td (TEST PARAMETER) Tj 240 618 Td (OBSERVED VALUE) Tj 350 618 Td (REFERENCE RANGE) Tj 470 618 Td (STATUS) Tj ET
+0.93 0.94 0.96 RG 0.5 w
+40 600 m 555 600 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 602 Td (Lung Parenchyma (Bilateral)) Tj ET
+BT /F2 8 Tf 240 602 Td (Clear Fields) Tj ET
+BT /F1 8 Tf 350 602 Td (No Consolidation/Infiltrate) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 602 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 585 m 555 585 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 587 Td (Bronchovascular Markings) Tj ET
+BT /F2 8 Tf 240 587 Td (Normal Distribution) Tj ET
+BT /F1 8 Tf 350 587 Td (Prominence Absent) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 587 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 570 m 555 570 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 572 Td (Cardiothoracic Ratio (CTR)) Tj ET
+BT /F2 8 Tf 240 572 Td (0.44) Tj ET
+BT /F1 8 Tf 350 572 Td (< 0.50 Normal) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 572 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 555 m 555 555 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 557 Td (Costophrenic Angles) Tj ET
+BT /F2 8 Tf 240 557 Td (Sharp Bilaterally) Tj ET
+BT /F1 8 Tf 350 557 Td (Clear & Sharp) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 557 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 540 m 555 540 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 542 Td (Trachea & Mediastinum) Tj ET
+BT /F2 8 Tf 240 542 Td (Central in Position) Tj ET
+BT /F1 8 Tf 350 542 Td (Midline Normal) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 542 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.93 0.94 0.96 RG 0.5 w
+40 525 m 555 525 l S
+0.15 0.2 0.25 rg
+BT /F1 8 Tf 45 527 Td (Bony Thorax & Soft Tissue) Tj ET
+BT /F2 8 Tf 240 527 Td (Normal Architecture) Tj ET
+BT /F1 8 Tf 350 527 Td (No Fracture / Lesion) Tj ET
+0.05 0.55 0.2 rg
+BT /F1 8 Tf 470 527 Td (NORMAL) Tj ET
+0.1 0.15 0.2 rg
+0.97 0.98 0.99 rg 40 462 515 45 re f
+0.8 0.85 0.9 RG 1 w 40 462 515 45 re S
+0.05 0.35 0.55 rg
+BT /F2 9 Tf 50 496 Td (CLINICAL INTERPRETATION & ADVISORY:) Tj ET
+0.25 0.3 0.35 rg
+BT /F1 8 Tf 50 482 Td (1. Normal digital chest radiograph without evidence of acute cardiopulmonary disease.) Tj ET
+BT /F1 8 Tf 50 471 Td (2. No pleural effusion, pneumothorax, or active parenchymal lesions detected.) Tj ET
+BT /F1 8 Tf 50 460 Td (3. Cardiac silhouette size and vascular pedicle are within expected physiological limits.) Tj ET
+0.85 0.88 0.92 RG 1 w 40 60 m 555 60 l S
+0.3 0.35 0.4 rg
+BT /F2 8 Tf 40 48 Td (Authorized Signatory: Dr. N. Sengupta (MD, DMRD Radiologist)) Tj ET
+BT /F1 7.5 Tf 40 38 Td (MediFlow Pathology Center, 100 Clinical Way, New Delhi. Ph: +1-123-556-5523) Tj ET
+BT /F2 7.5 Tf 440 38 Td (Electronic Verified Report) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000004293 00000 n 
+0000004363 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+4438
+%%EOF
